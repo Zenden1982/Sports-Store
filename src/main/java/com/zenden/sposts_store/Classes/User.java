@@ -3,8 +3,8 @@ package com.zenden.sposts_store.Classes;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.NumberFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,26 +15,32 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "users")
-public class Users {
+public class User {
     
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
+    @Column(unique = true, nullable = false, length=15)
     private String username;
 
+    @Column(nullable = false, length=100)
     private String password;
 
     @Email
+    @Column(unique = true, nullable = false, length=20)
     private String email;
 
+    @Column(nullable = false, length=15)
     private String fistName;
 
+    @Column(nullable = false, length=15)
     private String lastName;
 
+    @Column(nullable = false, length=50)
     private String address;
 
-    @NumberFormat
+    @Column(nullable = false, length=10)
     private String phoneNumber;
 
     @CreatedDate
