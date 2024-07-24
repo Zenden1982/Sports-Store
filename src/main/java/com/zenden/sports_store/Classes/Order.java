@@ -1,8 +1,8 @@
-package com.zenden.sposts_store.Classes;
+package com.zenden.sports_store.Classes;
 
 import org.springframework.format.annotation.NumberFormat;
 
-import com.zenden.sposts_store.Classes.Enum.OrderStatus;
+import com.zenden.sports_store.Classes.Enum.OrderStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.zenden.sposts_store.Classes;
+package com.zenden.sports_store.Classes;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

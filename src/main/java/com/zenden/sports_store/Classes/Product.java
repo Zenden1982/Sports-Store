@@ -1,4 +1,4 @@
-package com.zenden.sposts_store.Classes;
+package com.zenden.sports_store.Classes;
 
 import org.springframework.format.annotation.NumberFormat;
 
@@ -30,7 +30,10 @@ public class Product extends Auditable {
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     @Column(nullable = false)
-    private double price;
+    private long price;
+
+    @Column(nullable = false)
+    private int stock;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

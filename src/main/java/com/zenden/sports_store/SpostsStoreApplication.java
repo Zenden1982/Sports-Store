@@ -1,4 +1,4 @@
-package com.zenden.sposts_store;
+package com.zenden.sports_store;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
