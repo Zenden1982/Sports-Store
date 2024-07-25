@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.Category;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Services.ImageService;
 
@@ -47,7 +47,8 @@ public abstract class ProductMapper {
 
     @Named("ImageToString")
     public String getImage(MultipartFile image) {
-        imageService.UploadImage(image);
+        imageService.uploadImage(image);
         return image.getOriginalFilename();
     }
 }
+

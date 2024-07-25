@@ -5,12 +5,11 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class DiscountDTO {
+public class DiscountCreateUpdateDTO {
     private long id;
     private String code;
     private long productId;
     private int percentage;
     private LocalDateTime expiryDate;
     private String description;
-    
 }

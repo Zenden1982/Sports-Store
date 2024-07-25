@@ -21,7 +21,7 @@ public abstract class OrderMapper {
 
     
     public abstract OrderReadDTO orderToOrderReadDTO(Order order);
-    @Mapping(source="userId", target = "userId", qualifiedByName = "userId")
+    @Mapping(source="userId", target = "user", qualifiedByName = "userId")
     public abstract Order orderCreateUpdateDTOToOrder(OrderCreateUpdateDTO orderCreateUpdateDTO);
 
     @Named("userId")

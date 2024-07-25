@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.zenden.sports_store.Classes.Discount;
 import com.zenden.sports_store.Classes.Product;
-import com.zenden.sports_store.Classes.DTO.DiscountDTO;
+import com.zenden.sports_store.Classes.DTO.DiscountCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.DiscountReadDTO;
 import com.zenden.sports_store.Repositories.ProductRepository;
 
 @Mapper(componentModel = "spring")
@@ -17,10 +18,11 @@ public abstract class DiscountMapper {
 
     @Autowired
     private ProductRepository productRepository;
-
-    public abstract DiscountDTO discountToDiscountDTO(Discount discount);
+    
+    public abstract DiscountReadDTO discountToDiscountDTO(Discount discount);
+    
     @Mapping(source = "productId", target = "product", qualifiedByName = "idToProduct")
-    public abstract Discount discountDTOtoDiscount(DiscountDTO discountDTO);
+    public abstract Discount discountDTOToDiscount(DiscountCreateUpdateDTO discountDTO);
 
     @Named("idToProduct")
     public Product idToDiscount(long id) {

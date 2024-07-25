@@ -1,29 +1,34 @@
 package com.zenden.sposts_store;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zenden.sports_store.SpostsStoreApplication;
 import com.zenden.sports_store.Classes.Category;
-import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
-import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
-import com.zenden.sports_store.Classes.Enum.OrderStatus;
+import com.zenden.sports_store.Classes.Discount;
 import com.zenden.sports_store.Classes.Order;
 import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.User;
+import com.zenden.sports_store.Classes.DTO.DiscountReadDTO;
+import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
+import com.zenden.sports_store.Classes.Enum.OrderStatus;
+import com.zenden.sports_store.Mapper.DiscountMapper;
 import com.zenden.sports_store.Mapper.OrderMapper;
 import com.zenden.sports_store.Mapper.ProductMapper;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
-import com.zenden.sports_store.SpostsStoreApplication;
 
 @SpringBootTest(classes = SpostsStoreApplication.class)
 class SpostsStoreApplicationTests {
@@ -40,8 +45,13 @@ class SpostsStoreApplicationTests {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private DiscountMapper discountMapper;
+
     @InjectMocks
     private SpostsStoreApplicationTests spostsStoreApplicationTests;
+
+
 
     @BeforeEach
     void setUp() {
@@ -75,7 +85,7 @@ class SpostsStoreApplicationTests {
 
         // Маппинг DTO в Order
         Order order = new Order();
-        order.setUserId(user);
+        order.setUser(user);
         order.setTotalPrice(100);
         order.setStatus(OrderStatus.PENDING);
 
@@ -84,7 +94,7 @@ class SpostsStoreApplicationTests {
         // Проверки
         Order mappedOrder = orderMapper.orderCreateUpdateDTOToOrder(orderCreateUpdateDTO);
         assertThat(mappedOrder).isNotNull();
-        assertThat(mappedOrder.getUserId()).isEqualTo(user);
+        assertThat(mappedOrder.getUser()).isEqualTo(user);
         assertThat(mappedOrder.getTotalPrice()).isEqualTo(100);
         assertThat(mappedOrder.getStatus()).isEqualTo(OrderStatus.PENDING);
 
@@ -126,5 +136,33 @@ class SpostsStoreApplicationTests {
         assertThat(mappedProduct.getPrice()).isEqualTo(100);
         assertThat(mappedProduct.getStock()).isEqualTo(10);
         assertThat(mappedProduct.getCategory()).isEqualTo(category);
+    }
+
+
+    @Test
+    void testDiscountMapper() {
+    // Product product = new Product();
+    // product.setProductName("Product 1");
+    // product.setProductDescription("Product 1 description");
+    // product.setPrice(100);
+    // product.setStock(10);
+    // product.setCategory(categoryRepository.saveAndFlush(mock(Category.class)));
+        Discount discount = new Discount();
+        discount.setCode("Discount 1");
+        discount.setPercentage(10);
+        discount.setExpiryDate(LocalDateTime.now().plusDays(30));
+        discount.setDescription("Discount 1 description");
+        discount.setProduct(mock(Product.class));
+
+        DiscountReadDTO discountReadDTO = new DiscountReadDTO();
+        discountReadDTO.setId(discount.getId());
+        discountReadDTO.setCode(discount.getCode());
+        discountReadDTO.setProductDTO(productMapper.productToProductReadDTO(discount.getProduct()));
+        discountReadDTO.setPercentage(discount.getPercentage());
+        discountReadDTO.setExpiryDate(discount.getExpiryDate());
+        discountReadDTO.setDescription(discount.getDescription());
+
+        when(discountMapper.discountToDiscountDTO(any(Discount.class))).thenReturn(discountReadDTO);
+
     }
 }

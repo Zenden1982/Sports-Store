@@ -38,9 +38,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, length=10)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 }

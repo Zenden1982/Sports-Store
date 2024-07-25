@@ -15,7 +15,7 @@ public class ImageService {
 
     public String BUCKET = "src\\main\\resources\\images";
 
-    public void UploadImage(MultipartFile image) {
+    public void uploadImage(MultipartFile image) {
         Optional<String> originalFilename = Optional.ofNullable(image.getOriginalFilename());
         if (originalFilename.isPresent()) {
             Path fullPath = Path.of(BUCKET, image.getOriginalFilename().replace("/", "\\"));
