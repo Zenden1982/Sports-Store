@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class ReviewCreateUpdateDTO {
     private long id;
-    private UserReadDTO userDTO;
+    private long userId;
+    private long productId;
     private String comment;
     private long rating;
 }

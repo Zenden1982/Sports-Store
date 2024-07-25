@@ -7,7 +7,7 @@ public class OrderItemReadDTO {
 
     private Long id;
     private OrderReadDTO orderId;
-    private ProductDTO productId;
+    private ProductReadDTO productId;
     private Integer quantity;
     private Long price;
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 public class ReviewReadDTO {
     private long id;
     private UserReadDTO userDTO;
+    private ProductReadDTO productDTO;
     private String comment;
     private long rating;
     private LocalDateTime createdDate;

@@ -38,8 +38,8 @@ public class Product extends BaseEntity {
     private String image;
     
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category categoryId;
+    @JoinColumn(name = "categoryId")
+    private Category category;
 
     @OneToMany(mappedBy = "productId")
     private List<Review> reviews;
