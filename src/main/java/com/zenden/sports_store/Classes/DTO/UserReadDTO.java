@@ -14,5 +14,6 @@ public class UserReadDTO {
     private String lastName;
     private String address;
     private String phoneNumber;
-    private LocalDateTime registrationDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }

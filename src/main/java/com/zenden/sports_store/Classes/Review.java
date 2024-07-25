@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "reviews")
-public class Review extends Auditable{
+public class Review extends BaseEntity{
     @Id
     @GeneratedValue(strategy=jakarta.persistence.GenerationType.IDENTITY)
     private long id;

@@ -2,17 +2,14 @@ package com.zenden.sports_store.Classes.DTO;
 
 import java.time.LocalDateTime;
 
-import com.zenden.sports_store.Classes.Enum.OrderStatus;
-
 import lombok.Data;
 
 @Data
-public class OrderReadDTO {
+public class ReviewReadDTO {
     private long id;
     private UserReadDTO userDTO;
-    private long totalPrice;
-    private OrderStatus status;
-
+    private String comment;
+    private long rating;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

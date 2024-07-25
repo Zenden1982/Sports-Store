@@ -1,25 +1,20 @@
 package com.zenden.sports_store.Classes;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "users")
-public class User {
-    
-    @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private long id;
+public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false, length=15)
     private String username;
@@ -32,7 +27,7 @@ public class User {
     private String email;
 
     @Column(nullable = false, length=15)
-    private String fistName;
+    private String firstName;
 
     @Column(nullable = false, length=15)
     private String lastName;
@@ -43,7 +38,9 @@ public class User {
     @Column(nullable = false, length=10)
     private String phoneNumber;
 
-    @CreatedDate
-    private LocalDateTime registrationDate;
+    @OneToMany(mappedBy = "userId")
+    private List<Order> orders;
 
+    @OneToMany(mappedBy = "userId")
+    private List<Review> reviews;
 }

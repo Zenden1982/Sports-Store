@@ -4,20 +4,19 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "discounts")
-public class Discount {
-    @Id
-    @GeneratedValue(strategy=jakarta.persistence.GenerationType.IDENTITY)
-    private long id;
+public class Discount extends BaseEntity{
 
     @Column(nullable = false, unique = true, length=15)
     private String code;
@@ -32,4 +31,8 @@ public class Discount {
 
     @Column(nullable = true, length=100)
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product productId;
 }
