@@ -1,4 +1,4 @@
-package com.zenden.sposts_store;
+package com.zenden.sports_store;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.zenden.sports_store.SpostsStoreApplication;
 import com.zenden.sports_store.Classes.Category;
 import com.zenden.sports_store.Classes.Discount;
 import com.zenden.sports_store.Classes.Order;
@@ -30,8 +29,8 @@ import com.zenden.sports_store.Mapper.ProductMapper;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 
-@SpringBootTest(classes = SpostsStoreApplication.class)
-class SpostsStoreApplicationTests {
+@SpringBootTest(classes = SportsStoreApplication.class)
+class SportsStoreApplicationTests {
 
     @Mock
     private OrderMapper orderMapper;
@@ -49,9 +48,7 @@ class SpostsStoreApplicationTests {
     private DiscountMapper discountMapper;
 
     @InjectMocks
-    private SpostsStoreApplicationTests spostsStoreApplicationTests;
-
-
+    private SportsStoreApplicationTests sportsStoreApplicationTests;
 
     @BeforeEach
     void setUp() {
@@ -80,13 +77,13 @@ class SpostsStoreApplicationTests {
         // Создаем DTO для заказа
         OrderCreateUpdateDTO orderCreateUpdateDTO = new OrderCreateUpdateDTO();
         orderCreateUpdateDTO.setUserId(user.getId());
-        orderCreateUpdateDTO.setTotalPrice(100);
+        orderCreateUpdateDTO.setTotalPrice(100L);
         orderCreateUpdateDTO.setStatus(OrderStatus.PENDING);
 
         // Маппинг DTO в Order
         Order order = new Order();
         order.setUser(user);
-        order.setTotalPrice(100);
+        order.setTotalPrice(100L);
         order.setStatus(OrderStatus.PENDING);
 
         when(orderMapper.orderCreateUpdateDTOToOrder(any(OrderCreateUpdateDTO.class))).thenReturn(order);
@@ -113,7 +110,7 @@ class SpostsStoreApplicationTests {
         ProductCreateUpdateDTO productCreateUpdateDTO = new ProductCreateUpdateDTO();
         productCreateUpdateDTO.setProductName("Product 1");
         productCreateUpdateDTO.setProductDescription("Product 1 description");
-        productCreateUpdateDTO.setPrice(100);
+        productCreateUpdateDTO.setPrice(100L);
         productCreateUpdateDTO.setStock(10);
         productCreateUpdateDTO.setCategoryId(category.getId());
         productCreateUpdateDTO.setImage(mock(MultipartFile.class));
@@ -122,7 +119,7 @@ class SpostsStoreApplicationTests {
         Product product = new Product();
         product.setProductName("Product 1");
         product.setProductDescription("Product 1 description");
-        product.setPrice(100);
+        product.setPrice(100L);
         product.setStock(10);
         product.setCategory(category);
 
@@ -141,12 +138,6 @@ class SpostsStoreApplicationTests {
 
     @Test
     void testDiscountMapper() {
-    // Product product = new Product();
-    // product.setProductName("Product 1");
-    // product.setProductDescription("Product 1 description");
-    // product.setPrice(100);
-    // product.setStock(10);
-    // product.setCategory(categoryRepository.saveAndFlush(mock(Category.class)));
         Discount discount = new Discount();
         discount.setCode("Discount 1");
         discount.setPercentage(10);
@@ -157,12 +148,21 @@ class SpostsStoreApplicationTests {
         DiscountReadDTO discountReadDTO = new DiscountReadDTO();
         discountReadDTO.setId(discount.getId());
         discountReadDTO.setCode(discount.getCode());
-        discountReadDTO.setProductDTO(productMapper.productToProductReadDTO(discount.getProduct()));
+        discountReadDTO.setProductReadDTO(productMapper.productToProductReadDTO(discount.getProduct()));
         discountReadDTO.setPercentage(discount.getPercentage());
         discountReadDTO.setExpiryDate(discount.getExpiryDate());
         discountReadDTO.setDescription(discount.getDescription());
 
         when(discountMapper.discountToDiscountDTO(any(Discount.class))).thenReturn(discountReadDTO);
 
+        // Проверки
+        DiscountReadDTO mappedDiscount = discountMapper.discountToDiscountDTO(discount);
+        assertThat(mappedDiscount).isNotNull();
+        assertThat(mappedDiscount.getId()).isEqualTo(discount.getId());
+        assertThat(mappedDiscount.getCode()).isEqualTo(discount.getCode());
+        assertThat(mappedDiscount.getProductReadDTO()).isEqualTo(productMapper.productToProductReadDTO(discount.getProduct()));
+        assertThat(mappedDiscount.getPercentage()).isEqualTo(discount.getPercentage());
+        assertThat(mappedDiscount.getExpiryDate()).isEqualTo(discount.getExpiryDate());
+        assertThat(mappedDiscount.getDescription()).isEqualTo(discount.getDescription());
     }
 }

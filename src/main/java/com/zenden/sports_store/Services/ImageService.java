@@ -18,6 +18,7 @@ public class ImageService {
     public void uploadImage(MultipartFile image) {
         Optional<String> originalFilename = Optional.ofNullable(image.getOriginalFilename());
         if (originalFilename.isPresent()) {
+            @SuppressWarnings("null")
             Path fullPath = Path.of(BUCKET, image.getOriginalFilename().replace("/", "\\"));
 
 
@@ -25,7 +26,7 @@ public class ImageService {
                 Files.createDirectories(fullPath.getParent());
                 Files.write(fullPath, image.getBytes());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -36,7 +37,7 @@ public class ImageService {
             try {
                 return Optional.of(Files.readAllBytes(fullPath.get()));
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
         return Optional.empty();

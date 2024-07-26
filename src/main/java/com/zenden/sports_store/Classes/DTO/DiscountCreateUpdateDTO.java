@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class DiscountCreateUpdateDTO {
-    private long id;
+    private Long id;
     private String code;
-    private long productId;
+    private Long productId;
     private int percentage;
     private LocalDateTime expiryDate;
     private String description;

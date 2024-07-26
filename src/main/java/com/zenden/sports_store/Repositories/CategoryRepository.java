@@ -8,6 +8,5 @@ import com.zenden.sports_store.Classes.Category;
 
 @Repository
 public interface  CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
-
     
 }

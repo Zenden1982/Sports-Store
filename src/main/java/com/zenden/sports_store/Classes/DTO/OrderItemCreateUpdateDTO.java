@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class OrderItemCreateUpdateDTO {
     private Long id;
-    private long orderId;
-    private long productId;
+    private Long orderId;
+    private Long productId;
     private Integer quantity;
     private Long price;
 }

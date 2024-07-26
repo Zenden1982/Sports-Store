@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class ReviewReadDTO {
-    private long id;
-    private UserReadDTO userDTO;
-    private ProductReadDTO productDTO;
+    private Long id;
+    private UserReadDTO userReadDTO;
+    private ProductReadDTO productReadDTO;
     private String comment;
-    private long rating;
+    private Long rating;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

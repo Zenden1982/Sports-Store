@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class OrderCreateUpdateDTO {
-    private long id;
-    private long userId;
-    private long totalPrice;
+    private Long id;
+    private Long userId;
+    private Long totalPrice;
     private OrderStatus status;
 }

@@ -11,7 +11,7 @@
 	<groupId>com.zenden</groupId>
 	<artifactId>sports-store</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sposts-store</name>
+	<name>sports-store</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -33,14 +33,10 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.5.3.Final</version>
+			<version>1.5.5.Final</version>
 		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>1.5.3.Final</version>
-			<scope>provided</scope>
-		</dependency>
+
+
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 <dependency>
@@ -123,17 +119,8 @@
 						</exclude>
 					</excludes>
 
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>1.5.3.Final</version>
-						</path>
-						<!-- other annotation processors -->
-					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-
 
 		</plugins>
 	</build>

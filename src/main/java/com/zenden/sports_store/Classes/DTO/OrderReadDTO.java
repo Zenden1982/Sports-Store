@@ -8,9 +8,9 @@ import lombok.Data;
 
 @Data
 public class OrderReadDTO {
-    private long id;
-    private UserReadDTO userDTO;
-    private long totalPrice;
+    private Long id;
+    private UserReadDTO userReadDTO;
+    private Long totalPrice;
     private OrderStatus status;
 
     private LocalDateTime createdDate;

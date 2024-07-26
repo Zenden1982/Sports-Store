@@ -14,7 +14,7 @@ import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Services.ImageService;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {CategoryMapper.class})
 @Component
 public abstract class ProductMapper {
 
@@ -24,7 +24,6 @@ public abstract class ProductMapper {
     @Autowired
     ImageService imageService;
     
-
     @Mapping(source="category", target = "categoryDTO")
     @Mapping(source="image", target = "image", qualifiedByName = "StringToImage")
     public abstract ProductReadDTO productToProductReadDTO(Product product);
@@ -35,7 +34,7 @@ public abstract class ProductMapper {
     public abstract Product productCreateUpdateDTOtoProduct(ProductCreateUpdateDTO productDTO);
 
     @Named("categoryId")
-    public Category findCategoryById(long id) {
+    public Category findCategoryById(Long id) {
         return categoryRepository.findById(id).orElse(null);
         
     }

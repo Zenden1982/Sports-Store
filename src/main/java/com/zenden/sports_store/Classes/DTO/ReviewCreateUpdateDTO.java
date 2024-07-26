@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ReviewCreateUpdateDTO {
-    private long id;
-    private long userId;
-    private long productId;
+    private Long id;
+    private Long userId;
+    private Long productId;
     private String comment;
-    private long rating;
+    private Long rating;
 }

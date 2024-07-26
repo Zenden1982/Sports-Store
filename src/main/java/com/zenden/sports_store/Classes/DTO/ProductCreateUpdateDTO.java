@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class ProductCreateUpdateDTO {
-    private long id;
+    private Long id;
     private String productName;
     private String productDescription;
-    private long price;
+    private Long price;
     private int stock;
-    private long categoryId;
+    private Long categoryId;
     private MultipartFile image;
 }
