@@ -11,13 +11,13 @@ import com.zenden.sports_store.Classes.Category;
 import com.zenden.sports_store.Classes.DTO.CategoryDTO;
 import com.zenden.sports_store.Filters.Category.CategoryFilter;
 import com.zenden.sports_store.Filters.Category.CategorySpecification;
-import com.zenden.sports_store.Interfaces.BaseService;
+import com.zenden.sports_store.Interfaces.OneDtoService;
 import com.zenden.sports_store.Mapper.CategoryMapper;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 
 @Service
 @Component
-public class CategoryService implements BaseService<CategoryDTO, CategoryFilter> {
+public class CategoryService implements OneDtoService<CategoryDTO, CategoryFilter> {
 
     @Autowired
     private CategoryMapper mapper;
