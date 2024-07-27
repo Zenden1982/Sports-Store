@@ -123,10 +123,10 @@ class SportsStoreApplicationTests {
         product.setStock(10);
         product.setCategory(category);
 
-        when(productMapper.productCreateUpdateDTOtoProduct(any(ProductCreateUpdateDTO.class))).thenReturn(product);
+        when(productMapper.productCreateUpdateDTOToProduct(any(ProductCreateUpdateDTO.class))).thenReturn(product);
 
         // Проверки
-        Product mappedProduct = productMapper.productCreateUpdateDTOtoProduct(productCreateUpdateDTO);
+        Product mappedProduct = productMapper.productCreateUpdateDTOToProduct(productCreateUpdateDTO);
         assertThat(mappedProduct).isNotNull();
         assertThat(mappedProduct.getProductName()).isEqualTo("Product 1");
         assertThat(mappedProduct.getProductDescription()).isEqualTo("Product 1 description");

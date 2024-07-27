@@ -4,18 +4,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.Category;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Services.ImageService;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class})
-@Component
 public abstract class ProductMapper {
 
     @Autowired
@@ -31,7 +29,7 @@ public abstract class ProductMapper {
 
     @Mapping(source="categoryId", target = "category", qualifiedByName = "categoryId")
     @Mapping(source="image", target = "image", qualifiedByName = "ImageToString")
-    public abstract Product productCreateUpdateDTOtoProduct(ProductCreateUpdateDTO productDTO);
+    public abstract Product productCreateUpdateDTOToProduct(ProductCreateUpdateDTO productDTO);
 
     @Named("categoryId")
     public Category findCategoryById(Long id) {
