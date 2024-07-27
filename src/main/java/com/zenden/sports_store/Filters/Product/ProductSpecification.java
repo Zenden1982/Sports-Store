@@ -7,11 +7,11 @@ import com.zenden.sports_store.Classes.Product;
 public class ProductSpecification {
 
     public static Specification<Product> nameLike(String name) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"), "%" + name + "%");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("productName"), "%" + name + "%");
     }
 
     public static Specification<Product> descriptionLike(String description) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("description"), "%" + description + "%");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("productDescription"), "%" + description + "%");
     }
 
     public static Specification<Product> priceLessThan(long price) {

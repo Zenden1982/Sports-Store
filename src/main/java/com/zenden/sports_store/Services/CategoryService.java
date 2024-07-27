@@ -3,6 +3,7 @@ package com.zenden.sports_store.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -69,10 +70,9 @@ public class CategoryService implements OneDtoService<CategoryDTO, CategoryFilte
     public Page<CategoryDTO> readAll(int page, int size, String sort, CategoryFilter filter) {
         Specification<Category> spec = Specification.where(null);
         if (filter != null) {
-            spec.and(filter.getName() != null ? CategorySpecification.nameLike(filter.getName()) : null);
-            spec.and(filter.getDescription() != null ? CategorySpecification.descriptionLike(filter.getDescription()) : null);
+            spec = spec.and(filter.getName() != null ? CategorySpecification.nameLike(filter.getName()) : null);
+            spec = spec.and(filter.getDescription() != null ? CategorySpecification.descriptionLike(filter.getDescription()) : null);
         }
-        
-        return categoryRepository.findAll(spec, PageRequest.of(page, size)).map(mapper::categoryToCategoryDTO);
+        return categoryRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort))).map(mapper::categoryToCategoryDTO);
     }
 }

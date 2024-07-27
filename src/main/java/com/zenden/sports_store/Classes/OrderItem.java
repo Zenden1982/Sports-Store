@@ -30,4 +30,5 @@ public class OrderItem extends BaseEntity{
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     @Column(nullable = false)
     private Long price;
+    
 }

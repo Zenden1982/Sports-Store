@@ -13,4 +13,5 @@ public interface OneDtoService<DTO, Filter> extends BaseService{
     public DTO update(Long id, DTO entity);
 
     public void delete(Long id);
+    
 }

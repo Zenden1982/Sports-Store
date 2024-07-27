@@ -49,15 +49,15 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
     public Page<ProductReadDTO> readAll(int page, int size, String sort, ProductFiler filter) {
         Specification<Product> spec = Specification.where(null);
         if (filter != null) {
-            spec.and(filter.getName() != null && !filter.getName().isEmpty() 
+            spec = spec.and(filter.getName() != null && !filter.getName().isEmpty() 
                     ? ProductSpecification.nameLike(filter.getName()) : null);
-            spec.and(filter.getDescription() != null && !filter.getDescription().isEmpty() 
+            spec = spec.and(filter.getDescription() != null && !filter.getDescription().isEmpty() 
                     ? ProductSpecification.descriptionLike(filter.getDescription()) : null);
-            spec.and(filter.getPriceLess() != null
+            spec = spec.and(filter.getPriceLess() != null
                     ? ProductSpecification.priceLessThan(filter.getPriceLess()) : null);
-            spec.and(filter.getPriceGreater() != null
+            spec = spec.and(filter.getPriceGreater() != null
                     ? ProductSpecification.priceGreaterThan(filter.getPriceGreater()) : null);
-            spec.and(filter.getCategoryId() != null 
+            spec = spec.and(filter.getCategoryId() != null 
                     ? ProductSpecification.categoryEquals(filter.getCategoryId()) : null);
         }
         try {

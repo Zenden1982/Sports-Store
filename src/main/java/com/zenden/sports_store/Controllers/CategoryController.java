@@ -25,7 +25,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
     
-
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(entity));
@@ -36,11 +35,10 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.OK).body(categoryService.read(id));
     }
 
-
     @PostMapping("/all")
     public ResponseEntity<Page<CategoryDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sort,
+            @RequestParam(defaultValue = "categoryName") String sort,
             @RequestBody CategoryFilter filter)
         {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.readAll(page, size, sort, filter));
