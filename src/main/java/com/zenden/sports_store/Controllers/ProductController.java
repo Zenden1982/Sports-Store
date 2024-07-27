@@ -12,22 +12,28 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
+import com.zenden.sports_store.Services.ImageService;
 import com.zenden.sports_store.Services.ProductService;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
+    @Autowired ImageService imageService;
+
     @PostMapping
-    public ResponseEntity<ProductReadDTO> create(@RequestBody ProductCreateUpdateDTO entity) {
+    public ResponseEntity<ProductReadDTO> create(@RequestPart("image") MultipartFile image, @RequestPart("entity") ProductCreateUpdateDTO entity) {
+        entity.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(entity));
     }
 
