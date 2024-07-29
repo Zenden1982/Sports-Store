@@ -90,7 +90,14 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     @Override
     public UserReadDTO update(Long id, UserCreateUpdateDTO entity) {
         return userRepository.findById(id).map(user -> {
-                user = mapper.userCreateUpdateDTOToUser(entity);
+                User tempUser = mapper.userCreateUpdateDTOToUser(entity);
+                user.setUsername(tempUser.getUsername());
+                user.setPassword(tempUser.getPassword());
+                user.setEmail(tempUser.getEmail());
+                user.setFirstName(tempUser.getFirstName());
+                user.setLastName(tempUser.getLastName());
+                user.setPhoneNumber(tempUser.getPhoneNumber());
+                user.setAddress(tempUser.getAddress());
             return mapper.userToUserReadDTO(userRepository.saveAndFlush(user));
         }).orElseThrow(() -> {
             throw new RuntimeException("Error updating user" + id);

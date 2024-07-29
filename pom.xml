@@ -43,6 +43,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+				<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 <dependency>

@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
-import com.zenden.sports_store.Services.ImageService;
 import com.zenden.sports_store.Services.ProductService;
 
 @RestController
@@ -28,8 +27,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired ImageService imageService;
 
     @PostMapping
     public ResponseEntity<ProductReadDTO> create(@RequestPart("image") MultipartFile image, @RequestPart("entity") ProductCreateUpdateDTO entity) {
