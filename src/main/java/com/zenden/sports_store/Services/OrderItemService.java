@@ -16,7 +16,10 @@ import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.OrderItemMapper;
 import com.zenden.sports_store.Repositories.OrderItemRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderItemCreateUpdateDTO, OrderItemFilter> {
 
     @Autowired

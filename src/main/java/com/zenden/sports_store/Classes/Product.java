@@ -47,5 +47,4 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<Discount> discounts;
 
-
 }

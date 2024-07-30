@@ -16,7 +16,10 @@ import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.DiscountMapper;
 import com.zenden.sports_store.Repositories.DiscountRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class DiscountService implements TwoDtoService<DiscountReadDTO, DiscountCreateUpdateDTO, DiscountFilter> {
 
     @Autowired
