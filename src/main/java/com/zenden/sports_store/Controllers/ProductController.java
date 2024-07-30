@@ -19,43 +19,60 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
-import com.zenden.sports_store.Filters.Product.ProductFiler;
+import com.zenden.sports_store.Filters.Product.ProductFilter;
 import com.zenden.sports_store.Services.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin
+@Tag(name = "Product Controller", description = "CRUD операции для продуктов")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductReadDTO> create(@RequestPart("image") MultipartFile image, @RequestPart("entity") ProductCreateUpdateDTO entity) {
+    @Operation(summary = "Создать новый продукт", description = "Создает новый продукт с указанными данными и изображением")
+    public ResponseEntity<ProductReadDTO> create(
+            @RequestPart("image") @Parameter(description = "Изображение продукта") MultipartFile image,
+            @RequestPart("entity") @Parameter(description = "Данные нового продукта") ProductCreateUpdateDTO entity) {
         entity.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(entity));
     }
 
     @PostMapping("/all")
-    public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sort,
-            @RequestBody ProductFiler filter) {
+    @Operation(summary = "Получить все продукты", description = "Возвращает список всех продуктов с возможностью пагинации и сортировки")
+    public ResponseEntity<Page<ProductReadDTO>> readAll(
+            @RequestParam(defaultValue = "0") @Parameter(description = "Номер страницы для пагинации") int page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "Размер страницы для пагинации") int size,
+            @RequestParam(defaultValue = "name") @Parameter(description = "Поле для сортировки продуктов") String sort,
+            @RequestBody @Parameter(description = "Фильтры для получения продуктов") ProductFilter filter) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.readAll(page, size, sort, filter));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductReadDTO> read(@PathVariable Long id) {
+    @Operation(summary = "Получить продукт по ID", description = "Возвращает данные продукта по указанному ID")
+    public ResponseEntity<ProductReadDTO> read(
+            @PathVariable @Parameter(description = "ID продукта для получения") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.read(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductReadDTO> update(@PathVariable Long id, @RequestBody ProductCreateUpdateDTO entity) {
+    @Operation(summary = "Обновить продукт", description = "Обновляет данные продукта по указанному ID")
+    public ResponseEntity<ProductReadDTO> update(
+            @PathVariable @Parameter(description = "ID продукта для обновления") Long id,
+            @RequestBody @Parameter(description = "Обновленные данные продукта") ProductCreateUpdateDTO entity) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.update(id, entity));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(Long id) {
+    @Operation(summary = "Удалить продукт", description = "Удаляет продукт по указанному ID")
+    public ResponseEntity<Void> delete(
+            @PathVariable @Parameter(description = "ID продукта для удаления") Long id) {
         productService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

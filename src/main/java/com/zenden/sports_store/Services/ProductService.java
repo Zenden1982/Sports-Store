@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
-import com.zenden.sports_store.Filters.Product.ProductFiler;
+import com.zenden.sports_store.Filters.Product.ProductFilter;
 import com.zenden.sports_store.Filters.Product.ProductSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.ProductMapper;
@@ -22,7 +22,7 @@ import com.zenden.sports_store.Repositories.ProductRepository;
 @Transactional
 @Component
 @Service
-public class ProductService implements TwoDtoService<ProductReadDTO, ProductCreateUpdateDTO, ProductFiler>{
+public class ProductService implements TwoDtoService<ProductReadDTO, ProductCreateUpdateDTO, ProductFilter>{
 
     @Autowired
     private ProductRepository productRepository;
@@ -46,7 +46,7 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
     }
 
     @Override
-    public Page<ProductReadDTO> readAll(int page, int size, String sort, ProductFiler filter) {
+    public Page<ProductReadDTO> readAll(int page, int size, String sort, ProductFilter filter) {
         Specification<Product> spec = Specification.where(null);
         if (filter != null) {
             spec = spec.and(filter.getName() != null && !filter.getName().isEmpty() 

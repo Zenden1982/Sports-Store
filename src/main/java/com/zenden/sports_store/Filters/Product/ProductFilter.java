@@ -3,7 +3,7 @@ package com.zenden.sports_store.Filters.Product;
 import lombok.Data;
 
 @Data
-public class ProductFiler {
+public class ProductFilter {
     private String name;
     private String description;
     private Long priceLess;

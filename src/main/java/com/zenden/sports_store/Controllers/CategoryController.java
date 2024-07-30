@@ -19,42 +19,52 @@ import com.zenden.sports_store.Classes.DTO.CategoryDTO;
 import com.zenden.sports_store.Filters.Category.CategoryFilter;
 import com.zenden.sports_store.Services.CategoryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/categories")
 @CrossOrigin
+@Tag(name = "Category Controller", description = "CRUD операции для категорий")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
     
     @PostMapping
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO entity) {
+    @Operation(summary = "Создать новую категорию", description = "Создает новую категорию с указанными данными")
+    public ResponseEntity<CategoryDTO> create(@RequestBody @Parameter(description = "Данные новой категории") CategoryDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(entity));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> read(@PathVariable Long id) {
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.read(id));
+    @Operation(summary = "Получить категорию по ID", description = "Возвращает данные категории по указанному ID")
+    public ResponseEntity<CategoryDTO> read(@PathVariable @Parameter(description = "ID категории для получения") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.read(id));
     }
 
     @PostMapping("/all")
-    public ResponseEntity<Page<CategoryDTO>> readAll(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "categoryName") String sort,
-            @RequestBody CategoryFilter filter)
-        {
+    @Operation(summary = "Получить все категории", description = "Возвращает список всех категорий с возможностью пагинации и сортировки")
+    public ResponseEntity<Page<CategoryDTO>> readAll(
+            @RequestParam(defaultValue = "0") @Parameter(description = "Номер страницы для пагинации") int page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "Размер страницы для пагинации") int size,
+            @RequestParam(defaultValue = "categoryName") @Parameter(description = "Поле для сортировки категорий") String sort,
+            @RequestBody @Parameter(description = "Фильтры для получения категорий") CategoryFilter filter) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.readAll(page, size, sort, filter));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO entity) {
+    @Operation(summary = "Обновить категорию", description = "Обновляет данные категории по указанному ID")
+    public ResponseEntity<CategoryDTO> update(@PathVariable @Parameter(description = "ID категории для обновления") Long id,
+                                              @RequestBody @Parameter(description = "Обновленные данные категории") CategoryDTO entity) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(id, entity));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @Operation(summary = "Удалить категорию", description = "Удаляет категорию по указанному ID")
+    public ResponseEntity<Void> delete(@PathVariable @Parameter(description = "ID категории для удаления") Long id) {
         categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 }
