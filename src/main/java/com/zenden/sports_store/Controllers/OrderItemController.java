@@ -14,48 +14,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
-import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
-import com.zenden.sports_store.Filters.Order.OrderFilter;
-import com.zenden.sports_store.Services.OrderService;
-
-
+import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
+import com.zenden.sports_store.Filters.OrderItem.OrderItemFilter;
+import com.zenden.sports_store.Services.OrderItemService;
 
 @RestController
-@RequestMapping("/api/orders")
 @CrossOrigin
-public class OrderController {
+@RequestMapping("/api/orderitems")
+public class OrderItemController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderItemService orderItemService;
 
     @PostMapping
-    public ResponseEntity<OrderReadDTO> create(@RequestBody OrderCreateUpdateDTO order) {
-        return ResponseEntity.status(201).body(orderService.create(order));
+    public ResponseEntity<OrderItemReadDTO> create(@RequestBody OrderItemCreateUpdateDTO orderItem) {
+        return ResponseEntity.status(201).body(orderItemService.create(orderItem));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderReadDTO> read(@PathVariable Long id) {
-        return ResponseEntity.status(200).body(orderService.read(id));
+    public ResponseEntity<OrderItemReadDTO> read(@PathVariable Long id) {
+        return ResponseEntity.status(200).body(orderItemService.read(id));
     }
 
     @PostMapping("/all")
-    public ResponseEntity<Page<OrderReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<OrderItemReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort,
-            @RequestBody OrderFilter filter) {
-        return ResponseEntity.status(200).body(orderService.readAll(page, size, sort, filter));
+            @RequestBody OrderItemFilter filter) {
+        return ResponseEntity.status(200).body(orderItemService.readAll(page, size, sort, filter));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderReadDTO> update(@PathVariable Long id, @RequestBody OrderCreateUpdateDTO entity) {
-        return ResponseEntity.status(200).body(orderService.update(id, entity));
+    public ResponseEntity<OrderItemReadDTO> update(@PathVariable Long id, @RequestBody OrderItemCreateUpdateDTO orderItem) {
+        return ResponseEntity.status(200).body(orderItemService.update(id, orderItem));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        orderService.delete(id);
+        orderItemService.delete(id);
         return ResponseEntity.status(200).build();
     }
-
 }
