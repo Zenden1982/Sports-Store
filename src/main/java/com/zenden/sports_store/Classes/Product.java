@@ -32,12 +32,13 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private int stock;
     
-    private String image;
-    
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @OneToMany(mappedBy = "product")
+    private List<Image> images;
+    
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
 

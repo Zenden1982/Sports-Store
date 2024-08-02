@@ -11,5 +11,4 @@ public class ProductReadDTO {
     private Long price;
     private int stock;
     private CategoryDTO categoryDTO;
-    private byte[] image;
 }

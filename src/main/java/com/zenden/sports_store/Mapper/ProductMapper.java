@@ -4,12 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.Category;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 import com.zenden.sports_store.Services.ImageService;
 
@@ -23,12 +22,10 @@ public abstract class ProductMapper {
     ImageService imageService;
     
     @Mapping(source="category", target = "categoryDTO")
-    @Mapping(source="image", target = "image", qualifiedByName = "StringToImage")
     public abstract ProductReadDTO productToProductReadDTO(Product product);
 
 
     @Mapping(source="categoryId", target = "category", qualifiedByName = "categoryId")
-    @Mapping(source="image", target = "image", qualifiedByName = "ImageToString")
     public abstract Product productCreateUpdateDTOToProduct(ProductCreateUpdateDTO productDTO);
 
     @Named("categoryId")
@@ -37,15 +34,15 @@ public abstract class ProductMapper {
         
     }
 
-    @Named("StringToImage")
-    public byte[] getImage(String image) {
-        return imageService.getImage(image).orElse(null);
-    }
+    // @Named("StringToImage")
+    // public byte[] getImage(String image) {
+    //     return imageService.getImage(image).orElse(null);
+    // }
 
-    @Named("ImageToString")
-    public String getImage(MultipartFile image) {
-        imageService.uploadImage(image);
-        return image.getOriginalFilename();
-    }
+    // @Named("ImageToString")
+    // public String getImage(MultipartFile image) {
+    //     imageService.uploadImage(image);
+    //     return image.getOriginalFilename();
+    // }
 }
 

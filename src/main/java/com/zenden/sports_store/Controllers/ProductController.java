@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
@@ -29,8 +27,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductReadDTO> create(@RequestPart("image") MultipartFile image, @RequestPart("entity") ProductCreateUpdateDTO entity) {
-        entity.setImage(image);
+    public ResponseEntity<ProductReadDTO> create(@RequestBody ProductCreateUpdateDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(entity));
     }
 

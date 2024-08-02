@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Filters.Product.ProductSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -75,7 +75,6 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
             product.setProductDescription(tempProduct.getProductDescription());
             product.setPrice(tempProduct.getPrice());
             product.setStock(tempProduct.getStock());
-            product.setImage(tempProduct.getImage());
             product.setCategory(tempProduct.getCategory());
             return productMapper.productToProductReadDTO(productRepository.saveAndFlush(product));
         }).orElseThrow(() -> new RuntimeException("Error updating product" + id));
