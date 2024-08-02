@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,14 +9,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
+import com.zenden.sports_store.Classes.OrderItem;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemFilter;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.OrderItemMapper;
 import com.zenden.sports_store.Repositories.OrderItemRepository;
+import com.zenden.sports_store.Repositories.ProductRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -28,9 +32,17 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
     @Autowired
     private OrderItemRepository orderItemRepository;
     
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
     public OrderItemReadDTO create(OrderItemCreateUpdateDTO entity) {
         try {
+            Optional<Product> product = productRepository.findById(entity.getProductId());
+            if (product.isPresent()) {
+                product.get().setStock(product.get().getStock() - entity.getQuantity());
+                productRepository.saveAndFlush(product.get());
+            }
             return orderItemMapper.orderItemToOrderItemReadDTO(orderItemRepository.save(orderItemMapper.orderItemCreateUpdateDTOToOrderItem(entity)));
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating order item" + entity.getId());
