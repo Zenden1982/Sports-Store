@@ -3,7 +3,6 @@ package com.zenden.sports_store.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,6 @@ import com.zenden.sports_store.Services.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -40,7 +38,7 @@ public class UserController {
     @PostMapping("/all")
     public ResponseEntity<Page<UserReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sort,
+            @RequestParam(defaultValue = "id") String sort,
             @RequestBody UserFilter filter) {
         return ResponseEntity.status(200).body(userService.readAll(page, size, sort, filter));
     }
