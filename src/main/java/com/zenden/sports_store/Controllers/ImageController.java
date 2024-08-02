@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.Image;
+import com.zenden.sports_store.Filters.Image.ImageFilter;
 import com.zenden.sports_store.Repositories.ProductRepository;
 import com.zenden.sports_store.Services.ImageService;
 
@@ -42,8 +43,11 @@ public class ImageController {
     @GetMapping("/all")
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sort) {
-        return ResponseEntity.status(200).body(imageService.readAll(page,size,sort, null));
+            @RequestParam(defaultValue = "id") String sort, @RequestParam(defaultValue = "") Long id) {
+                ImageFilter filter = new ImageFilter();
+                filter.setProductId(id);
+        return ResponseEntity.status(200).body(imageService.readAll(page,size,sort, filter));
     }
+    
 
 }
