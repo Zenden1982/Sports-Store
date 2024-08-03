@@ -10,7 +10,7 @@ import lombok.Data;
 public class OrderReadDTO {
     private Long id;
     private UserReadDTO userReadDTO;
-    private Long totalPrice;
+    private Double totalPrice;
     private OrderStatus status;
 
     private LocalDateTime createdDate;

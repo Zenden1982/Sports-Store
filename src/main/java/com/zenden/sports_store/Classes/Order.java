@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
 
-    private Long totalPrice;
+    private Double totalPrice;
 
     @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column(nullable = false)

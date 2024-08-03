@@ -36,12 +36,12 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
+    public ResponseEntity<?> read(@PathVariable Long id) {
         return ResponseEntity.status(200).body(imageService.getImage(imageService.read(id).getImage()));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort, @RequestParam(defaultValue = "") Long id) {
                 ImageFilter filter = new ImageFilter();

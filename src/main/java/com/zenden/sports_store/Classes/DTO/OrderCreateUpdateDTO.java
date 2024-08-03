@@ -8,6 +8,6 @@ import lombok.Data;
 public class OrderCreateUpdateDTO {
     private Long id;
     private Long userId;
-    private Long totalPrice;
+    private Double totalPrice;
     private OrderStatus status;
 }

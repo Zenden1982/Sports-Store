@@ -7,7 +7,7 @@ public class ProductCreateUpdateDTO {
     private Long id;
     private String productName;
     private String productDescription;
-    private Long price;
+    private Double price;
     private int stock;
     private Long categoryId;
 }

@@ -27,7 +27,7 @@ public class Product extends BaseEntity {
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     @Column(nullable = false)
-    private Long price;
+    private Double price;
 
     @Column(nullable = false)
     private int stock;

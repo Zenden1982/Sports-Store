@@ -8,7 +8,7 @@ public class ProductReadDTO {
     private Long id;
     private String productName;
     private String productDescription;
-    private Long price;
+    private Double price;
     private int stock;
     private CategoryDTO categoryDTO;
 }

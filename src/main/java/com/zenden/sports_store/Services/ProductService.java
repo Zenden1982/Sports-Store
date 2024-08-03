@@ -30,6 +30,8 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
     @Autowired
     private ProductMapper productMapper;
     
+    @Autowired
+    private ExchangeRateService exchangeRateService;
     
     @Override
     public ProductReadDTO create(ProductCreateUpdateDTO entity) {
@@ -41,7 +43,10 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
 
     @Override
     public ProductReadDTO read(Long id) {
-        return productRepository.findById(id).map(productMapper::productToProductReadDTO)
+        return productRepository.findById(id).map(productMapper::productToProductReadDTO).map(product -> {
+            product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice()));
+            return product;
+        })
                 .orElseThrow(() -> new RuntimeException("Error reading product" + id));
     }
 
@@ -61,7 +66,10 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
                     ? ProductSpecification.categoryEquals(filter.getCategoryId()) : null);
         }
         try {
-            return productRepository.findAll(spec, PageRequest.of(page, size)).map(productMapper::productToProductReadDTO);
+            return productRepository.findAll(spec, PageRequest.of(page, size)).map(productMapper::productToProductReadDTO).map(product -> {
+                product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice()));
+                return product;
+            });
         } catch (RuntimeException e) {
             throw new RuntimeException("Error reading all products", e);
         }

@@ -2,7 +2,6 @@ package com.zenden.sports_store.Handler;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
@@ -19,10 +18,13 @@ import com.zenden.sports_store.Repositories.DiscountRepository;
 
 //Позволяет выводить цену продукта со скидкой и без через Handler
 @ControllerAdvice
-public class DiscountHandler implements ResponseBodyAdvice<Object>{ 
+public class DiscountHandler implements ResponseBodyAdvice<Object> {
 
-    @Autowired
-    private DiscountRepository discountRepository;
+    private final DiscountRepository discountRepository;
+
+    public DiscountHandler(DiscountRepository discountRepository) {
+        this.discountRepository = discountRepository;
+    }
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -30,18 +32,17 @@ public class DiscountHandler implements ResponseBodyAdvice<Object>{
         return HttpEntity.class.isAssignableFrom(parameterType);
     }
 
-
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
+            Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
+            ServerHttpResponse response) {
         if (body != null) {
             List<String> discountHeaders = request.getHeaders().get("Discount");
-            boolean applyDiscount = discountHeaders != null && discountHeaders.stream().anyMatch("true"::equalsIgnoreCase);
-            if (applyDiscount) {
+            if (discountHeaders != null && discountHeaders.stream().anyMatch("true"::equalsIgnoreCase)) {
                 if (body instanceof ProductReadDTO) {
                     applyDiscount((ProductReadDTO) body);
                 } else if (body instanceof Page) {
-                    Page<?> page = (Page<?>) body;
-                    page.forEach(item -> {
+                    ((Page<?>) body).forEach(item -> {
                         if (item instanceof ProductReadDTO) {
                             applyDiscount((ProductReadDTO) item);
                         }
@@ -52,9 +53,10 @@ public class DiscountHandler implements ResponseBodyAdvice<Object>{
         return body;
     }
 
-    public void applyDiscount(ProductReadDTO productReadDTO) {
-        int discount = discountRepository.findByProductId(productReadDTO.getId()).get().getPercentage();
-        productReadDTO.setPrice(productReadDTO.getPrice() - (productReadDTO.getPrice() * discount / 100));
+    private void applyDiscount(ProductReadDTO productReadDTO) {
+        discountRepository.findByProductId(productReadDTO.getId())
+                .ifPresent(discount -> productReadDTO.setPrice(productReadDTO.getPrice()
+                        - (productReadDTO.getPrice() * discount.getPercentage() / 100)));
     }
-
 }
+
