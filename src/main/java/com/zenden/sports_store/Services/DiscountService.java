@@ -7,9 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.zenden.sports_store.Classes.Discount;
 import com.zenden.sports_store.Classes.DTO.DiscountCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.DiscountReadDTO;
+import com.zenden.sports_store.Classes.Discount;
 import com.zenden.sports_store.Filters.Discount.DiscountFilter;
 import com.zenden.sports_store.Filters.Discount.DiscountSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;

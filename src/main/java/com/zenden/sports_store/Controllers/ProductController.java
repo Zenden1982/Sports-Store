@@ -19,6 +19,8 @@ import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Services.ProductService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -32,6 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/all")
+    @Operation(summary = "Получить все продукты", description="В Headers можно передать два параметра Discount:true/false и Course:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "productName") String sort,
@@ -40,6 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Получить продукт по ID", description="В Headers можно передать два параметра Discount:true/false и Course:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<ProductReadDTO> read(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.read(id));
     }
