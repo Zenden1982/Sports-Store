@@ -34,7 +34,7 @@ public class ProductController {
     @PostMapping("/all")
     public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sort,
+            @RequestParam(defaultValue = "productName") String sort,
             @RequestBody ProductFiler filter) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.readAll(page, size, sort, filter));
     }

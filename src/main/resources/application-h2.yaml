@@ -1,0 +1,12 @@
+
+spring:
+    datasource:
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:file:~/SportSstore
+        username: sa
+        password:
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update

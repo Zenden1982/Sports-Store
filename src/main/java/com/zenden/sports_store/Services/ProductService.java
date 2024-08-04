@@ -1,18 +1,21 @@
 package com.zenden.sports_store.Services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Filters.Product.ProductSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -44,7 +47,8 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
     @Override
     public ProductReadDTO read(Long id) {
         return productRepository.findById(id).map(productMapper::productToProductReadDTO).map(product -> {
-            product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice()));
+            product.setPrice(BigDecimal.valueOf(exchangeRateService.getActualExchangeRate(product.getPrice()))
+                    .setScale(2, RoundingMode.HALF_UP).doubleValue());
             return product;
         })
                 .orElseThrow(() -> new RuntimeException("Error reading product" + id));
@@ -66,7 +70,7 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
                     ? ProductSpecification.categoryEquals(filter.getCategoryId()) : null);
         }
         try {
-            return productRepository.findAll(spec, PageRequest.of(page, size)).map(productMapper::productToProductReadDTO).map(product -> {
+            return productRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort))).map(productMapper::productToProductReadDTO).map(product -> {
                 product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice()));
                 return product;
             });
