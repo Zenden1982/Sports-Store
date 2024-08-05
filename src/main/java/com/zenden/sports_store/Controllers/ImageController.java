@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,7 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> read(@PathVariable Long id) {
+    public ResponseEntity<Optional<byte[]>> read(@PathVariable Long id) {
         return ResponseEntity.status(200).body(imageService.getImage(imageService.read(id).getImage()));
     }
 
