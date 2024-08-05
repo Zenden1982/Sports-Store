@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
-import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
 import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.Product;
+import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemFilter;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -45,7 +45,7 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
             }
             return orderItemMapper.orderItemToOrderItemReadDTO(orderItemRepository.save(orderItemMapper.orderItemCreateUpdateDTOToOrderItem(entity)));
         } catch (RuntimeException e) {
-            throw new RuntimeException("Error creating order item" + entity.getId());
+            throw new RuntimeException("Error creating order item");
         }
     }
 
@@ -68,7 +68,6 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
             orderItem.setProduct(tempOrderItem.getProduct());
             orderItem.setQuantity(tempOrderItem.getQuantity());
             orderItem.setOrder(tempOrderItem.getOrder());
-            orderItem.setPrice(tempOrderItem.getPrice());
             orderItemRepository.save(tempOrderItem);
             return orderItemMapper.orderItemToOrderItemReadDTO(tempOrderItem);
         }).orElseThrow(() -> {

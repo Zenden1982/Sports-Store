@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -26,7 +27,7 @@ public class Product extends BaseEntity {
     private String productDescription;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Double price;
 
     @Column(nullable = false)
@@ -36,16 +37,16 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
     private List<Image> images;
     
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
     private List<Discount> discounts;
 
 }

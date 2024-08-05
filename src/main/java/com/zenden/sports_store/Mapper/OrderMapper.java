@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.zenden.sports_store.Classes.Order;
 import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Repositories.ProductRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
@@ -26,7 +27,7 @@ public abstract class OrderMapper {
 
     @Mapping(source = "user", target = "userReadDTO")
     public abstract OrderReadDTO orderToOrderReadDTO(Order order);
-    @Mapping(source="productIds", target = "totalPrice", qualifiedByName = "totalPrice")
+    @Mapping(source="orderItemIds", target = "totalPrice", qualifiedByName = "totalPrice")
     @Mapping(source="userId", target = "user", qualifiedByName = "userId")
     public abstract Order orderCreateUpdateDTOToOrder(OrderCreateUpdateDTO orderCreateUpdateDTO);
 
@@ -36,10 +37,10 @@ public abstract class OrderMapper {
     }
 
     @Named("totalPrice")
-    public Double mapTotalPrice(List<Long> productIds) {
+    public Double mapTotalPrice(List<OrderItemCreateUpdateDTO> orderItemIds) {
         Double total = 0.0;
-        for (Long id : productIds) {
-            total += productRepository.findById(id).get().getPrice();
+        for (OrderItemCreateUpdateDTO id : orderItemIds) {
+            total += productRepository.findById(id.getProductId()).get().getPrice();
         }
         return total;
     }

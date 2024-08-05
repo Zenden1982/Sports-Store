@@ -6,6 +6,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 import com.zenden.sports_store.Classes.Enum.OrderStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -27,13 +28,12 @@ public class Order extends BaseEntity {
     private User user;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-
     private Double totalPrice;
 
     @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade= CascadeType.ALL)
     private List<OrderItem> orderItems;
 }

@@ -9,5 +9,4 @@ public class OrderItemReadDTO {
     private OrderReadDTO orderReadDTO;
     private ProductReadDTO productReadDTO;
     private Integer quantity;
-    private Long price;
 }

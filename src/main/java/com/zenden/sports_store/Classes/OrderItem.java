@@ -1,7 +1,5 @@
 package com.zenden.sports_store.Classes;
 
-import org.springframework.format.annotation.NumberFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -27,8 +25,5 @@ public class OrderItem extends BaseEntity{
     @Column(nullable = false)
     private int quantity;
 
-    @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    @Column(nullable = false)
-    private Long price;
     
 }

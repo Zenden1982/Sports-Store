@@ -10,7 +10,7 @@ import lombok.Data;
 public class OrderCreateUpdateDTO {
     private Long id;
     private Long userId;
-    private List<Long> productIds;
+    private List<OrderItemCreateUpdateDTO> orderItemIds;
     private OrderStatus status;
 
 }
