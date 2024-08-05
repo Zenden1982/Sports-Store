@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
+import com.zenden.sports_store.Classes.Enum.OrderStatus;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
 import com.zenden.sports_store.Filters.Order.OrderSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -78,6 +81,17 @@ private OrderItemRepository orderItemRepository;
         return orderRepository.findById(id).map(order -> {
             order.setTotalPrice(order.getTotalPrice());
             order.setStatus(entity.getStatus());
+
+            if (entity.getStatus().equals(OrderStatus.CANCELED)) {
+                List<Product> products = order.getOrderItems().stream().map(orderItem -> {
+                    Product product = orderItem.getProduct();
+                    product.setStock(product.getStock() + orderItem.getQuantity());
+                    return product;
+                }).toList();
+                for (Product product : products) {
+                    productRepository.save(product);
+                }
+            }
             order.setUser(order.getUser());
             return orderMapper.orderToOrderReadDTO(orderRepository.save(order));
         }).orElseThrow(() -> {
