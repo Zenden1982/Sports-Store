@@ -10,4 +10,6 @@ public class OrderCreateUpdateDTO {
     private Long userId;
     private Double totalPrice;
     private OrderStatus status;
+
+    //TODO: Убрать totaslPrice и добавить список продуктов
 }

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity{
 
-    @Column(unique = true, nullable = false, length=15)
+    @Column(unique = true, nullable = false, length=50)
     private String categoryName;
 
     @Column(nullable = false, length=100)

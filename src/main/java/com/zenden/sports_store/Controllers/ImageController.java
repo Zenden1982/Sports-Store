@@ -1,6 +1,7 @@
 package com.zenden.sports_store.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,7 @@ public class ImageController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> readAll(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<byte[]>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort, @RequestParam(defaultValue = "") Long id) {
                 ImageFilter filter = new ImageFilter();
@@ -51,7 +52,7 @@ public class ImageController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<byte[]> delete(@PathVariable Long id) {
         imageService.delete(id);
         return ResponseEntity.status(200).build();
     }
