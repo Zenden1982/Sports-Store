@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Classes.DTO;
 
+import java.util.List;
+
 import com.zenden.sports_store.Classes.Enum.OrderStatus;
 
 import lombok.Data;
@@ -8,8 +10,7 @@ import lombok.Data;
 public class OrderCreateUpdateDTO {
     private Long id;
     private Long userId;
-    private Double totalPrice;
+    private List<Long> productIds;
     private OrderStatus status;
 
-    //TODO: Убрать totaslPrice и добавить список продуктов
 }
