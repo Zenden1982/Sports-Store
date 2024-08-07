@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ExchangeRateService {
 
     @Autowired
@@ -28,6 +31,7 @@ public class ExchangeRateService {
             USD = rootNode.get("USD").asDouble();
             EUR = rootNode.get("EUR").asDouble();
             KZT = rootNode.get("KZT").asDouble();
+            log.info("Exchange rate: USD - {}, EUR - {}, KZT - {}", USD, EUR, KZT);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
