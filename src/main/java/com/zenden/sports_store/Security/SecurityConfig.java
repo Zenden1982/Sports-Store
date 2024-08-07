@@ -35,10 +35,10 @@ public class SecurityConfig {
             .csrf(csrf->csrf.disable())
             .cors(cors->cors.disable())
             .authorizeHttpRequests((requests) -> requests
-                // .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/orders/**").authenticated()
-                // .requestMatchers(HttpMethod.GET,"/api/orders/**").authenticated()
+                .requestMatchers(HttpMethod.GET,"/api/orders/**").authenticated()
                 .anyRequest().hasRole("ADMIN"))
             .authenticationProvider(authenticationProvider())
             .sessionManagement(session -> session

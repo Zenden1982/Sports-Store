@@ -63,7 +63,10 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     public UserReadDTO create(UserCreateUpdateDTO entity) {
         User user = mapper.userCreateUpdateDTOToUser(entity);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName("ROLE_USER").orElse(roleRepository.save(new Role(0, "ROLE_USER")));
+        Role role = new Role();
+        if (!roleRepository.findByName("ROLE_USER").isPresent()){
+            role = new Role(0, "ROLE_USER");
+        }
 
         user.setRoles(List.of(role));
         return Optional.ofNullable(userRepository.save(user))

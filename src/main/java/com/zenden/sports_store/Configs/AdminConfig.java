@@ -27,8 +27,10 @@ public class AdminConfig {
         user.setLastName("admin");
         user.setPhoneNumber("admin");
         user.setAddress("admin");
-        Role role = new Role(0, "ROLE_ADMIN");
-        roleRepository.findByName("ROLE_ADMIN").orElse(roleRepository.save(role));
+        Role role = new Role();
+        if (!roleRepository.findByName("ROLE_ADMIN").isPresent()){
+            role = new Role(0, "ROLE_ADMIN");
+        }
         user.setRoles(List.of(role));
         return user;
     }
