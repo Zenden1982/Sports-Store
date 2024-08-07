@@ -2,11 +2,11 @@ package com.zenden.sports_store.Classes;
 
 import java.util.List;
 
-import com.zenden.sports_store.Classes.Enum.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -41,9 +41,12 @@ public class User extends BaseEntity {
     @Column(nullable = false, length=10)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    @Enumerated(jakarta.persistence.EnumType.STRING)
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;

@@ -1,6 +1,6 @@
 package com.zenden.sports_store.Filters.User;
 
-import com.zenden.sports_store.Classes.Enum.Role;
+import com.zenden.sports_store.Classes.Role;
 
 import lombok.Data;
 

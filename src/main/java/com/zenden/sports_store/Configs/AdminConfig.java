@@ -1,13 +1,21 @@
 package com.zenden.sports_store.Configs;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.zenden.sports_store.Classes.Role;
 import com.zenden.sports_store.Classes.User;
-import com.zenden.sports_store.Classes.Enum.Role;
+import com.zenden.sports_store.Repositories.RoleRepository;
+
 
 @Configuration
 public class AdminConfig {
+
+    @Autowired
+    private RoleRepository roleRepository;
     
     @Bean("admin")
     public User admin() {
@@ -19,7 +27,9 @@ public class AdminConfig {
         user.setLastName("admin");
         user.setPhoneNumber("admin");
         user.setAddress("admin");
-        user.setRole(Role.ROLE_ADMIN);
+        Role role = new Role(0, "ROLE_ADMIN");
+        roleRepository.findByName("ROLE_ADMIN").orElse(roleRepository.save(role));
+        user.setRoles(List.of(role));
         return user;
     }
 

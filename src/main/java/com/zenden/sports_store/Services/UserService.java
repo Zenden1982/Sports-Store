@@ -1,6 +1,5 @@
 package com.zenden.sports_store.Services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,10 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenden.sports_store.Classes.AuthRequest;
+import com.zenden.sports_store.Classes.Role;
 import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
-import com.zenden.sports_store.Classes.Enum.Role;
 import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Filters.User.UserSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -60,7 +59,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     public UserReadDTO create(UserCreateUpdateDTO entity) {
         User user = mapper.userCreateUpdateDTOToUser(entity);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.ROLE_USER);
+        user.setRoles(List.of(new Role(0, "ROLE_USER")));
         return Optional.ofNullable(userRepository.save(user))
                 .map(mapper::userToUserReadDTO)
                 .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
@@ -143,10 +142,8 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username + " not found"));
-        List<Role> roles = new ArrayList<>();
-        roles.add(user.getRole());
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).toList());
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
     }
 
     public String generateToken(AuthRequest user) {

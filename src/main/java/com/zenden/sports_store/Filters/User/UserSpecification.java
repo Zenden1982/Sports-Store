@@ -2,8 +2,8 @@ package com.zenden.sports_store.Filters.User;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.zenden.sports_store.Classes.Role;
 import com.zenden.sports_store.Classes.User;
-import com.zenden.sports_store.Classes.Enum.Role;
 
 public class UserSpecification {
 
@@ -39,6 +39,6 @@ public class UserSpecification {
 
     public static Specification<User> roleEquals(Role role) {
         return (root, criteriaQuery, criteriaBuilder) -> 
-            criteriaBuilder.equal(root.get("role"), role);
+            criteriaBuilder.equal(root.get("role").get("name"), role.getName());
     }
 }

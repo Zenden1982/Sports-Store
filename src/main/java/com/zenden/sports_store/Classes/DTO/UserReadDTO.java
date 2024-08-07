@@ -2,7 +2,7 @@ package com.zenden.sports_store.Classes.DTO;
 
 import java.time.LocalDateTime;
 
-import com.zenden.sports_store.Classes.Enum.Role;
+import com.zenden.sports_store.Classes.Role;
 
 import lombok.Data;
 
