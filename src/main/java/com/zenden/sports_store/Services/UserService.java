@@ -29,6 +29,7 @@ import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Filters.User.UserSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.UserMapper;
+import com.zenden.sports_store.Repositories.RoleRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 import com.zenden.sports_store.Security.JwtTokenUtils;
 
@@ -42,6 +43,9 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
 
     @Autowired
     private UserMapper mapper;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     @Lazy
@@ -59,7 +63,9 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     public UserReadDTO create(UserCreateUpdateDTO entity) {
         User user = mapper.userCreateUpdateDTOToUser(entity);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(List.of(new Role(0, "ROLE_USER")));
+        Role role = roleRepository.findByName("ROLE_USER").orElse(roleRepository.save(new Role(0, "ROLE_USER")));
+
+        user.setRoles(List.of(role));
         return Optional.ofNullable(userRepository.save(user))
                 .map(mapper::userToUserReadDTO)
                 .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
