@@ -31,7 +31,7 @@ public class ExchangeRateService {
             USD = rootNode.get("USD").asDouble();
             EUR = rootNode.get("EUR").asDouble();
             KZT = rootNode.get("KZT").asDouble();
-            log.info("Exchange rate: USD - {}, EUR - {}, KZT - {}", USD, EUR, KZT);
+            //log.info("Exchange rate: USD - {}, EUR - {}, KZT - {}", USD, EUR, KZT);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

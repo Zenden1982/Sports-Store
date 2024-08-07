@@ -1,15 +1,27 @@
 package com.zenden.sports_store.Services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zenden.sports_store.Classes.AuthRequest;
 import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
@@ -19,11 +31,12 @@ import com.zenden.sports_store.Filters.User.UserSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.UserMapper;
 import com.zenden.sports_store.Repositories.UserRepository;
+import com.zenden.sports_store.Security.JwtTokenUtils;
 
 
 @Component
 @Service
-public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateDTO, UserFilter>{
+public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateDTO, UserFilter>, UserDetailsService{
 
     @Autowired
     private UserRepository userRepository;
@@ -31,11 +44,23 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     @Autowired
     private UserMapper mapper;
 
+    @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtils jwtTokenUtils;
+
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     @Override
     public UserReadDTO create(UserCreateUpdateDTO entity) {
         User user = mapper.userCreateUpdateDTOToUser(entity);
-        user.setRole(Role.USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.ROLE_USER);
         return Optional.ofNullable(userRepository.save(user))
                 .map(mapper::userToUserReadDTO)
                 .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
@@ -104,6 +129,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
         });
     }
 
+
     @Transactional
     @Override
     public void delete(Long id) {
@@ -112,6 +138,27 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
         } catch (RuntimeException e) {
             throw new RuntimeException("Error deleting user" + id, e);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username + " not found"));
+        List<Role> roles = new ArrayList<>();
+        roles.add(user.getRole());
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).toList());
+    }
+
+    public String generateToken(AuthRequest user) {
+                try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        } catch (AuthenticationException e) {
+            return e.getMessage();
+        }
+
+        UserDetails userDetails = loadUserByUsername(user.getUsername());
+        String token = jwtTokenUtils.generateToken(userDetails);
+        return token;
     }
 
 }

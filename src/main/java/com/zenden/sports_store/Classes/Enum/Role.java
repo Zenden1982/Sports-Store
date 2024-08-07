@@ -1,5 +1,5 @@
 package com.zenden.sports_store.Classes.Enum;
 
 public enum Role {
-    ADMIN, USER
+    ROLE_ADMIN, ROLE_USER
 }

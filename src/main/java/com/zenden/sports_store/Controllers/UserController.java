@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Controllers;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zenden.sports_store.Classes.AuthRequest;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
 import com.zenden.sports_store.Filters.User.UserFilter;
@@ -25,9 +28,22 @@ public class UserController {
     @Autowired
     UserService userService;
 
+
     @PostMapping
     public ResponseEntity<UserReadDTO> create(@RequestBody UserCreateUpdateDTO user) {
         return ResponseEntity.status(201).body(userService.create(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthRequest user) {
+
+        return ResponseEntity.status(200).body(userService.generateToken(user));
+        
+    }
+
+    @PostMapping("/info")
+    public String userData(Principal principal) {
+        return principal.getName();
     }
 
     @GetMapping("/{id}")
