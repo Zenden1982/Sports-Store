@@ -1,6 +1,7 @@
 package com.zenden.sports_store.Controllers;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import com.zenden.sports_store.Classes.AuthRequest;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
 import com.zenden.sports_store.Filters.User.UserFilter;
+import com.zenden.sports_store.Security.JwtTokenUtils;
 import com.zenden.sports_store.Services.UserService;
 
 @RestController
@@ -28,6 +30,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtTokenUtils jwt;
 
     @PostMapping
     public ResponseEntity<UserReadDTO> create(@RequestBody UserCreateUpdateDTO user) {
@@ -44,6 +48,11 @@ public class UserController {
     @PostMapping("/info")
     public String userData(Principal principal) {
         return principal.getName();
+    }
+
+    @GetMapping("/role")
+    public List<String> role(String token) {
+        return jwt.getRolesFromToken(token);
     }
 
     @GetMapping("/{id}")

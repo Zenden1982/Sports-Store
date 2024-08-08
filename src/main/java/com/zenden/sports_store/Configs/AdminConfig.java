@@ -29,7 +29,9 @@ public class AdminConfig {
         user.setAddress("admin");
         Role role = new Role();
         if (!roleRepository.findByName("ROLE_ADMIN").isPresent()){
+
             role = new Role(0, "ROLE_ADMIN");
+            roleRepository.saveAndFlush(role);
         }
         user.setRoles(List.of(role));
         return user;

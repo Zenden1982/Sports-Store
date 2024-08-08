@@ -3,7 +3,6 @@ package com.zenden.sports_store.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,11 +34,14 @@ public class SecurityConfig {
             .csrf(csrf->csrf.disable())
             .cors(cors->cors.disable())
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
-                .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
-                .requestMatchers(HttpMethod.POST,"/api/orders/**").authenticated()
-                .requestMatchers(HttpMethod.GET,"/api/orders/**").authenticated()
-                .anyRequest().hasRole("ADMIN"))
+                // .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
+                // .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
+                // .requestMatchers(HttpMethod.POST,"/api/orders/**").authenticated()
+                // .requestMatchers(HttpMethod.GET,"/api/orders/**").authenticated()
+                // .anyRequest().hasRole("ADMIN"))
+                .requestMatchers("/api/users/info").authenticated()
+                .requestMatchers("/api/orders/**").hasRole("ADMIN")
+                .anyRequest().permitAll())
             .authenticationProvider(authenticationProvider())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
