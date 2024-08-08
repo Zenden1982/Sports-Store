@@ -3,14 +3,11 @@ package com.zenden.sports_store.Services;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zenden.sports_store.Classes.Image;
+import com.zenden.sports_store.Classes.DTO.ImageReadDTO;
 import com.zenden.sports_store.Filters.Image.ImageFilter;
 import com.zenden.sports_store.Filters.Image.ImageSpecification;
 import com.zenden.sports_store.Repositories.ImageRepository;
@@ -69,11 +67,11 @@ public class ImageService{
         }
     }
 
-    public Image read(Long id) {
-        return imageRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading image" + id));
+    public ImageReadDTO read(Long id) {
+        return imageRepository.findById(id).map(this::map).orElseThrow(() -> new RuntimeException("Error reading image" + id));
     }
 
-public Page<byte[]> readAll(int page, int size, String sort, ImageFilter filter) {
+public Page<ImageReadDTO> readAll(int page, int size, String sort, ImageFilter filter) {
     try {
         Specification<Image> spec = Specification.where(null);
 
@@ -81,20 +79,22 @@ public Page<byte[]> readAll(int page, int size, String sort, ImageFilter filter)
             spec = spec.and(filter.getProductId() != null ? ImageSpecification.filterByProductId(filter.getProductId()) : null);
         }
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sort));
-        Page<Image> imagePage = imageRepository.findAll(spec, pageRequest);
+       return imageRepository.findAll(spec, pageRequest)
+            .map(this::map);
 
-        List<byte[]> imageBytes = imagePage.stream()
-                .flatMap(image -> getImage(image.getImage()).stream())
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(imageBytes, pageRequest, imagePage.getTotalElements());
+        
     } catch (DataAccessException e) {
         throw new RuntimeException("Database error while reading images", e);
     } catch (Exception e) {
         throw new RuntimeException("Unexpected error while reading images", e);
     }
 }
-
+    public ImageReadDTO map(Image image) {
+        ImageReadDTO imageReadDTO = new ImageReadDTO();
+        imageReadDTO.setId(image.getId());
+        imageReadDTO.setImage(getImage(image.getImage()).get());
+        return imageReadDTO;
+    }
     public Image update(Long id, Image entity) {
         return imageRepository.findById(id).map(image -> {
             image.setImage(entity.getImage());
