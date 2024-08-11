@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
-    @Column(unique = true, nullable = false, length=15)
+    @Column(unique = true, nullable = false, length=50)
     private String productName;
 
     @Column(nullable = false, length=100)

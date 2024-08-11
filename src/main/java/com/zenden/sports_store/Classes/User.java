@@ -38,7 +38,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, length=50)
     private String address;
 
-    @Column(nullable = false, length=10)
+    @Column(nullable = false, length=15)
     private String phoneNumber;
 
     @ManyToMany

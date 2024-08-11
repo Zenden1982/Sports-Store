@@ -33,6 +33,9 @@ public class AdminConfig {
             role = new Role(0, "ROLE_ADMIN");
             roleRepository.saveAndFlush(role);
         }
+        else{
+            role = roleRepository.findByName("ROLE_ADMIN").get();
+        }
         user.setRoles(List.of(role));
         return user;
     }

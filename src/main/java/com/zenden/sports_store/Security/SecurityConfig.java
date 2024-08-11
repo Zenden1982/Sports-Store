@@ -33,6 +33,7 @@ public class SecurityConfig {
         http
             .csrf(csrf->csrf.disable())
             .cors(cors->cors.disable())
+            .headers(headers->headers.frameOptions().disable())
             .authorizeHttpRequests((requests) -> requests
                 // .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
                 // .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()

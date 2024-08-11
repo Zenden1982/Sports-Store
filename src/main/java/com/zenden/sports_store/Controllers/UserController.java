@@ -1,6 +1,5 @@
 package com.zenden.sports_store.Controllers;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,9 @@ public class UserController {
         
     }
 
-    @PostMapping("/info")
-    public String userData(Principal principal) {
-        return principal.getName();
+    @PostMapping("/username")
+    public String userData(String token) {
+        return jwt.getUsernameFromToken(token);
     }
 
     @GetMapping("/role")
