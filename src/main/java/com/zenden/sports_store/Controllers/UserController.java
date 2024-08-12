@@ -2,7 +2,6 @@ package com.zenden.sports_store.Controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,15 +21,16 @@ import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Security.JwtTokenUtils;
 import com.zenden.sports_store.Services.UserService;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/api/users")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    JwtTokenUtils jwt;
+    private final JwtTokenUtils jwt;
 
     @PostMapping
     public ResponseEntity<UserReadDTO> create(@RequestBody UserCreateUpdateDTO user) {

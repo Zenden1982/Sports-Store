@@ -1,6 +1,5 @@
 package com.zenden.sports_store.Controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +17,14 @@ import com.zenden.sports_store.Classes.DTO.CategoryDTO;
 import com.zenden.sports_store.Filters.Category.CategoryFilter;
 import com.zenden.sports_store.Services.CategoryService;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/api/categories")
+@AllArgsConstructor
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
     
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO entity) {
