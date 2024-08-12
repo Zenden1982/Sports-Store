@@ -34,6 +34,7 @@ import com.zenden.sports_store.Repositories.UserRepository;
 import com.zenden.sports_store.Security.JwtTokenUtils;
 
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -147,7 +148,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             user.setAddress(tempUser.getAddress());
             return mapper.userToUserReadDTO(userRepository.saveAndFlush(user));
         }).orElseThrow(() -> {
-            throw new RuntimeException("Error updating user" + id);
+            throw new EntityNotFoundException("Error updating user" + id);
         });
     }
     

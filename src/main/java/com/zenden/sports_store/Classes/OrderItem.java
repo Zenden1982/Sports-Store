@@ -25,5 +25,4 @@ public class OrderItem extends BaseEntity{
     @Column(nullable = false)
     private int quantity;
 
-    
 }
