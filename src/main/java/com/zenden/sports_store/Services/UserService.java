@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenden.sports_store.Classes.AuthRequest;
-import com.zenden.sports_store.Classes.Role;
-import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
+import com.zenden.sports_store.Classes.Role;
+import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Filters.User.UserSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;

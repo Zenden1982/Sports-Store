@@ -19,23 +19,23 @@ import lombok.EqualsAndHashCode;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(unique = true, nullable = false, length=15)
+    @Column(unique = true, nullable = false, length=100)
     private String username;
 
     @Column(nullable = false, length=100)
     private String password;
 
     @Email
-    @Column(unique = true, nullable = false, length=20)
+    @Column(unique = true, nullable = false, length=100)
     private String email;
 
-    @Column(nullable = false, length=15)
+    @Column(nullable = false, length=100)
     private String firstName;
 
-    @Column(nullable = false, length=15)
+    @Column(nullable = false, length=100)
     private String lastName;
 
-    @Column(nullable = false, length=50)
+    @Column(nullable = false, length=100)
     private String address;
 
     @Column(nullable = false, length=15)
