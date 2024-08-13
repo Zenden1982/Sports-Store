@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/confirm")
     public void confirm(@RequestParam String token, HttpServletResponse response) throws IOException{
         userService.confirmRegistration(token);
-        response.sendRedirect("http://localhost:8080/swagger-ui/index.html#/"); // Здесь укажите URL для перенаправления
+        response.sendRedirect("http://localhost:5173/"); // Здесь укажите URL для перенаправления
         
     }
     

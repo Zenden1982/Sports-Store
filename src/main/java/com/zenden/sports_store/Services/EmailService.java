@@ -53,6 +53,7 @@ public class EmailService {
         
         // Добавление изображения
         FileSystemResource image = new FileSystemResource(new File(imagePath));
+
         if (image.exists()) {
             helper.addInline("imageId", image); // "imageId" - идентификатор изображения в HTML
         } else {
