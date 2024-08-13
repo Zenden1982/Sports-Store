@@ -19,15 +19,7 @@ INSERT INTO users (username, password, email, first_name, last_name, address, ph
 
 -- Вставка данных в таблицу ролей
 INSERT INTO roles (name) VALUES
-('ROLE__USER'), ('ROLE__MODERATOR');
-
-
--- Вставка данных в таблицу заказов
-INSERT INTO orders (user_id, total_price, status) VALUES
-(1, 2999.99, 'PENDING'),
-(2, 199.99, 'DELIVERED'),
-(3, 1299.49, 'CANCELED');
-
+('ROLE__MODERATOR');
 
 -- Вставка данных в таблицу продуктов
 INSERT INTO products (product_name, product_description, price, stock, category_id) VALUES
@@ -35,13 +27,6 @@ INSERT INTO products (product_name, product_description, price, stock, category_
 ('Книга по программированию', 'Книга о программировании на Java.', 999.99, 100, 2),
 ('Джинсы', 'Удобные джинсы для повседневной носки.', 2999.99, 75, 3),
 ('Микроволновая печь', 'Микроволновка для быстрого разогрева пищи.', 4999.99, 30, 4);
-
-
--- Вставка данных в таблицу связи между пользователями и ролями
-INSERT INTO user_roles (user_id, role_id) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
 
 
 -- Вставка данных в таблицу отзывов
