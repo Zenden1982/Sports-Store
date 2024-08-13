@@ -192,20 +192,24 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username + " not found"));
         
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
-    }
-    
-    public String generateToken(AuthRequest user) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        } catch (AuthenticationException e) {
-            return e.getMessage();
+        if (Boolean.FALSE.equals(user.getEnabled())) {
+            throw new UsernameNotFoundException(username + " not found");
         }
         
-        UserDetails userDetails = loadUserByUsername(user.getUsername());
-        String token = jwtTokenUtils.generateToken(userDetails);
-        return token;
+    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
+}
+
+public String generateToken(AuthRequest user) {
+    try {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+    } catch (AuthenticationException e) {
+        return e.getMessage();
     }
     
+    UserDetails userDetails = loadUserByUsername(user.getUsername());
+    String token = jwtTokenUtils.generateToken(userDetails);
+    return token;
+}
+
 }
 
