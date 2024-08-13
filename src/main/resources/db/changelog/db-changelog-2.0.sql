@@ -1,7 +1,6 @@
 --liquibase formatted sql
 
-
---changelog nikita:2
+--changeset nikita:2
 
 -- Вставка данных в таблицу категорий
 INSERT INTO categories (category_name, category_description) VALUES
