@@ -14,7 +14,9 @@ import org.thymeleaf.context.Context;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Component
 public class EmailService {
@@ -31,7 +33,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     String fromString;
     
-    public void sendMail(String username, String to) throws MessagingException {
+    public void sendMail(String username, String to, String token) throws MessagingException {
         
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -43,6 +45,7 @@ public class EmailService {
         // Создание контекста для Thymeleaf
         Context context = new Context();
         context.setVariable("username", username);
+        context.setVariable("token", token);
         
         // Генерация HTML-содержимого письма
         String htmlContent = templateEngine.process("welcome-email", context);
@@ -53,9 +56,10 @@ public class EmailService {
         if (image.exists()) {
             helper.addInline("imageId", image); // "imageId" - идентификатор изображения в HTML
         } else {
-            System.out.println("Изображение не найдено по пути: " + imagePath);
+            log.error("Изображение не найдено по пути: " + imagePath);
         }
         
         javaMailSender.send(helper.getMimeMessage());
     }
+    
 }

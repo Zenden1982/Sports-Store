@@ -6,11 +6,11 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.zenden.sports_store.Classes.DTO.ReviewCreateUpdateDTO;
-import com.zenden.sports_store.Classes.DTO.ReviewReadDTO;
 import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.Review;
 import com.zenden.sports_store.Classes.User;
+import com.zenden.sports_store.Classes.DTO.ReviewCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.ReviewReadDTO;
 import com.zenden.sports_store.Repositories.ProductRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 

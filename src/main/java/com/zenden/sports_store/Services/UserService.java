@@ -2,6 +2,7 @@ package com.zenden.sports_store.Services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -71,23 +72,46 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
     public UserReadDTO create(UserCreateUpdateDTO entity) {
         User user = mapper.userCreateUpdateDTOToUser(entity);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName("ROLE_USER").get();
-        if (role == null) {
-            role = new Role(0, "ROLE_USER");
-            roleRepository.saveAndFlush(role);
+        Optional<Role> role = roleRepository.findByName("ROLE_USER");
+        if (role.isEmpty()) {
+            role = Optional.of(new Role(0, "ROLE_USER"));
+            roleRepository.saveAndFlush(role.get());
         }
+        user.setRoles(List.of(role.get()));
         
-        user.setRoles(List.of(role));
+        String token = UUID.randomUUID().toString();
+        
+        user.setEnabled(false);
+        user.setRegistrationToken(token);
+        
         User userOpt = userRepository.save(user);
-        try {
-            mailService.sendMail(user.getFirstName(), user.getEmail());
-        } catch (MessagingException e) {
-            log.error("Error sending mail", e);
-        }
+        sendWelcomeEMail(user, token);
+        
         return Optional.ofNullable(userOpt)
         .map(mapper::userToUserReadDTO)
         .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
     }
+    
+    @Transactional
+    public void confirmRegistration(String token) {
+        try {
+            User user = userRepository.findByRegistrationToken(token).get();
+            user.setEnabled(true);
+            user.setRegistrationToken(null);
+            userRepository.save(user);
+        } catch (EntityNotFoundException e) {
+            log.error("Error confirming registration", e);
+        }
+    }
+    
+    private void sendWelcomeEMail(User user, String token) {
+        try {
+            mailService.sendMail(user.getFirstName(), user.getEmail(), token);
+        } catch (MessagingException e) {
+            log.error("Error sending mail", e);
+        }
+    }
+    
     
     @Transactional(readOnly = true)
     @Override
@@ -109,9 +133,9 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             .and(filter.getEmail() != null && !filter.getEmail().isEmpty()
             ? UserSpecification.emailLike(filter.getEmail())
             : null)
-            .and(filter.getRole() != null
-            ? UserSpecification.roleEquals(filter.getRole())
-            : null)
+            // .and(filter.getRole() != null
+            // ? UserSpecification.roleEquals(filter.getRole())
+            // : null)
             .and(filter.getFirstName() != null && !filter.getFirstName().isEmpty()
             ? UserSpecification.firstNameLike(filter.getFirstName())
             : null)
@@ -121,6 +145,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             .and(filter.getPhoneNumber() != null && !filter.getPhoneNumber().isEmpty()
             ? UserSpecification.phoneNumberLike(filter.getPhoneNumber())
             : null)
+            .and(filter.getEnabled() != null ? UserSpecification.activeEquals(filter.getEnabled()) : null)
             .and(filter.getAddress() != null && !filter.getAddress().isEmpty()
             ? UserSpecification.addressLike(filter.getAddress())
             : null);
