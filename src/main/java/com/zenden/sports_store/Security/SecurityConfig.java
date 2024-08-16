@@ -33,13 +33,8 @@ public class SecurityConfig {
         http
             .csrf(csrf->csrf.disable())
             .cors(cors->cors.disable())
-            .headers(headers->headers.frameOptions().disable())
+            .headers(headers->headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
             .authorizeHttpRequests((requests) -> requests
-                // .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/**", "/api/categories/**", "/api/discounts/**").permitAll()
-                // .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
-                // .requestMatchers(HttpMethod.POST,"/api/orders/**").authenticated()
-                // .requestMatchers(HttpMethod.GET,"/api/orders/**").authenticated()
-                // .anyRequest().hasRole("ADMIN"))
                 .requestMatchers("/api/users/info").authenticated()
                 .requestMatchers("/api/orders/**").hasRole("ADMIN")
                 .anyRequest().permitAll())
