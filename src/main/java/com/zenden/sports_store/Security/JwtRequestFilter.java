@@ -20,12 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtRequestFilter extends OncePerRequestFilter{
+public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwtToken = null;
@@ -42,13 +43,10 @@ public class JwtRequestFilter extends OncePerRequestFilter{
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                username, null, jwtTokenUtils.getRolesFromToken(jwtToken).stream()
-                .map(SimpleGrantedAuthority::new).collect(Collectors.toList())
-                );
+                    username, null, jwtTokenUtils.getRolesFromToken(jwtToken).stream()
+                            .map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
-    
-
+}
