@@ -11,7 +11,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -36,14 +35,12 @@ import com.zenden.sports_store.Filters.Discount.DiscountFilter;
 import com.zenden.sports_store.Services.DiscountService;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class DiscountControllerTest {
-    
+
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mockMvc;
-
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -51,18 +48,15 @@ public class DiscountControllerTest {
     @MockBean
     private DiscountService discountService;
 
-    
     private DiscountCreateUpdateDTO discountCreateUpdateDTO;
     private DiscountReadDTO discountReadDTO;
 
-
-    
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders
-        .webAppContextSetup(context)
-        .apply(springSecurity())
-        .build();
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
 
         discountCreateUpdateDTO = new DiscountCreateUpdateDTO();
         discountCreateUpdateDTO.setPercentage(10);
@@ -87,23 +81,23 @@ public class DiscountControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(discountReadDTO)));
     }
 
-@Test
-@WithMockUser(roles = "ADMIN")
-public void testReadAllDiscounts() throws Exception {
-    Page<DiscountReadDTO> page = new PageImpl<>(Collections.singletonList(discountReadDTO));
-    when(discountService.readAll(anyInt(), anyInt(), anyString(), ArgumentMatchers.any(DiscountFilter.class)))
-            .thenReturn(page);
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testReadAllDiscounts() throws Exception {
+        Page<DiscountReadDTO> page = new PageImpl<>(Collections.singletonList(discountReadDTO));
+        when(discountService.readAll(anyInt(), anyInt(), anyString(), ArgumentMatchers.any(DiscountFilter.class)))
+                .thenReturn(page);
 
-    DiscountFilter filter = new DiscountFilter();
-    mockMvc.perform(post("/api/discounts/all")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(filter))
-            .param("page", "0")
-            .param("size", "10")
-            .param("sort", "id"))
-            .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(page)));
-}
+        DiscountFilter filter = new DiscountFilter();
+        mockMvc.perform(post("/api/discounts/all")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(filter))
+                .param("page", "0")
+                .param("size", "10")
+                .param("sort", "id"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
+    }
 
     @Test
     @WithMockUser(roles = "USER")

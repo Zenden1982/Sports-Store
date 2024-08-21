@@ -12,7 +12,7 @@
 	<artifactId>sports-store</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sports-store</name>
-	<description>Demo project for Spring Boot</description>
+	<description>API for sports store "CACHok"</description>
 	<url/>
 	<licenses>
 		<license/>

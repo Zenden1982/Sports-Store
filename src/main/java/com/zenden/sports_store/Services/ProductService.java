@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Filters.Product.ProductSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
