@@ -1,5 +1,6 @@
 package com.zenden.sports_store.Controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Security.JwtTokenUtils;
 import com.zenden.sports_store.Services.UserService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -37,11 +40,17 @@ public class UserController {
         return ResponseEntity.status(201).body(userService.create(user));
     }
 
+    @GetMapping("/confirm")
+    public void confirm(@RequestParam String token, HttpServletResponse response) throws IOException {
+        userService.confirmRegistration(token);
+        response.sendRedirect("http://localhost:5173/"); // Здесь укажите URL для перенаправления
+
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest user) {
 
         return ResponseEntity.status(200).body(userService.generateToken(user));
-        
     }
 
     @PostMapping("/username")
@@ -50,7 +59,8 @@ public class UserController {
     }
 
     @GetMapping("/role")
-    public List<String> role(String token) {
+    public List<String> role(@RequestHeader("Authorization") String header) {
+        String token = header.substring(7);
         return jwt.getRolesFromToken(token);
     }
 

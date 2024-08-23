@@ -21,46 +21,43 @@ public class ExchangeRateService {
 
     private static final String PATH = "/ExchangeRate.json";
 
-    private Double USD, EUR, KZT;
+    private Double usd;
+    private Double eur;
+    private Double kzt;
 
     @Scheduled(fixedRate = 3600)
-    public void GetExchange(){
-        try(InputStream inputStream = ExchangeRateService.class.getResourceAsStream(PATH)) {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(inputStream);
-            USD = rootNode.get("USD").asDouble();
-            EUR = rootNode.get("EUR").asDouble();
-            KZT = rootNode.get("KZT").asDouble();
-            //log.info("Exchange rate: USD - {}, EUR - {}, KZT - {}", USD, EUR, KZT);
+    public void updateExchangeRates() {
+        try (InputStream inputStream = ExchangeRateService.class.getResourceAsStream(PATH)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(inputStream);
+            usd = jsonNode.get("USD").asDouble();
+            eur = jsonNode.get("EUR").asDouble();
+            kzt = jsonNode.get("KZT").asDouble();
         } catch (IOException e) {
+            log.error("Failed to read exchange rates from file: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     public Double getActualExchangeRate(Double price) {
         String currency = userSessionService.getCurrency();
-        switch (currency) {
-            case "USD":
-                return price / USD;
-            case "EUR":
-                return price / EUR;
-            case "KZT":
-                return price / KZT;
-            default:
-                return (double)price;
-        }
+        return switch (currency) {
+            case "USD" -> price / usd;
+            case "EUR" -> price / eur;
+            case "KZT" -> price / kzt;
+            default -> price;
+        };
     }
 
     public Double getUSD() {
-        return USD;
+        return usd;
     }
 
     public Double getEUR() {
-        return EUR;
+        return eur;
     }
 
     public Double getKZT() {
-        return KZT;
+        return kzt;
     }
-
 }

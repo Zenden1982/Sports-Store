@@ -18,39 +18,45 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "users")
 public class User extends BaseEntity {
-
+    
     @Column(unique = true, nullable = false, length=100)
     private String username;
-
+    
     @Column(nullable = false, length=100)
     private String password;
-
+    
     @Email
     @Column(unique = true, nullable = false, length=100)
     private String email;
-
+    
     @Column(nullable = false, length=100)
     private String firstName;
-
+    
     @Column(nullable = false, length=100)
     private String lastName;
-
+    
     @Column(nullable = false, length=100)
     private String address;
-
+    
     @Column(nullable = false, length=15)
     private String phoneNumber;
+    
+    @Column
+    private String registrationToken;
 
+    @Column
+    private Boolean enabled;
+    
     @ManyToMany
     @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
-
+    
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
-
+    
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 }

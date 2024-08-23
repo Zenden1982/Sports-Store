@@ -1,6 +1,5 @@
 package com.zenden.sports_store.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,52 +16,46 @@ import com.zenden.sports_store.Interfaces.OneDtoService;
 import com.zenden.sports_store.Mapper.CategoryMapper;
 import com.zenden.sports_store.Repositories.CategoryRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Component
+@RequiredArgsConstructor
 public class CategoryService implements OneDtoService<CategoryDTO, CategoryFilter> {
 
-    @Autowired
-    private CategoryMapper mapper;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryMapper mapper;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     @Override
     public CategoryDTO create(CategoryDTO entity) {
-        try {
-            return mapper.categoryToCategoryDTO(categoryRepository.saveAndFlush(mapper.categoryDTOtoCategory(entity)));
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating category" + entity.getCategoryName());
-        }
+        return mapper.categoryToCategoryDTO(categoryRepository.saveAndFlush(mapper.categoryDTOtoCategory(entity)));
     }
 
     @Transactional(readOnly = true)
     @Override
     public CategoryDTO read(Long id) {
-        return mapper.categoryToCategoryDTO(categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading category" + id)));
+        return mapper.categoryToCategoryDTO(
+                categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading category" + id)));
     }
 
     @Transactional
     @Override
     public CategoryDTO update(Long id, CategoryDTO entity) {
-        return categoryRepository.findById(id).map(category -> {
-                Category tempCategory  = mapper.categoryDTOtoCategory(entity);
-                category.setCategoryName(tempCategory.getCategoryName());
-                category.setCategoryDescription(tempCategory.getCategoryDescription());
-            return mapper.categoryToCategoryDTO(categoryRepository.saveAndFlush(category));
-        })
-        .orElseThrow(() -> new RuntimeException("Error updating category" + id));
+        return categoryRepository.findById(id)
+                .map(category -> {
+                    Category tempCategory = mapper.categoryDTOtoCategory(entity);
+                    category.setCategoryName(tempCategory.getCategoryName());
+                    category.setCategoryDescription(tempCategory.getCategoryDescription());
+                    return mapper.categoryToCategoryDTO(categoryRepository.saveAndFlush(category));
+                })
+                .orElseThrow(() -> new RuntimeException("Error updating category" + id));
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        try {
-            categoryRepository.deleteById(id);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Error deleting category" + id);
-        }
+        categoryRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
@@ -71,8 +64,11 @@ public class CategoryService implements OneDtoService<CategoryDTO, CategoryFilte
         Specification<Category> spec = Specification.where(null);
         if (filter != null) {
             spec = spec.and(filter.getName() != null ? CategorySpecification.nameLike(filter.getName()) : null);
-            spec = spec.and(filter.getDescription() != null ? CategorySpecification.descriptionLike(filter.getDescription()) : null);
+            spec = spec.and(
+                    filter.getDescription() != null ? CategorySpecification.descriptionLike(filter.getDescription())
+                            : null);
         }
-        return categoryRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort))).map(mapper::categoryToCategoryDTO);
+        return categoryRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
+                .map(mapper::categoryToCategoryDTO);
     }
 }

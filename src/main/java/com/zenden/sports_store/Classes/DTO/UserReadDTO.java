@@ -1,8 +1,7 @@
 package com.zenden.sports_store.Classes.DTO;
 
 import java.time.LocalDateTime;
-
-import com.zenden.sports_store.Classes.Role;
+import java.util.List;
 
 import lombok.Data;
 
@@ -15,7 +14,8 @@ public class UserReadDTO {
     private String lastName;
     private String address;
     private String phoneNumber;
-    private Role role;
+    private Boolean enabled;
+    private List<String> roles;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

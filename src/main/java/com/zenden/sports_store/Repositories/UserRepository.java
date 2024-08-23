@@ -9,9 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import com.zenden.sports_store.Classes.User;
 
+
 @Repository
 @Component
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     Optional<User> findByUsername(String username);
+
+    Optional<User> findByRegistrationToken(String registrationToken);
 }
