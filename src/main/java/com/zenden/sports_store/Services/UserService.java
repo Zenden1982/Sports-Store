@@ -38,35 +38,34 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Component
 @Service
 @Slf4j
-public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateDTO, UserFilter>, UserDetailsService{
-    
+public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateDTO, UserFilter>, UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
-    private  UserMapper mapper;
-    
+    private UserMapper mapper;
+
     @Autowired
     private RoleRepository roleRepository;
-    
+
     @Lazy
     @Autowired
     private AuthenticationManager authenticationManager;
-    
+
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
-    
+
     @Autowired
     private EmailService mailService;
-    
+
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Transactional
     @Override
     public UserReadDTO create(UserCreateUpdateDTO entity) {
@@ -78,20 +77,20 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             roleRepository.saveAndFlush(role.get());
         }
         user.setRoles(List.of(role.get()));
-        
+
         String token = UUID.randomUUID().toString();
-        
+
         user.setEnabled(false);
         user.setRegistrationToken(token);
-        
+
         User userOpt = userRepository.save(user);
         sendWelcomeEMail(user, token);
-        
+
         return Optional.ofNullable(userOpt)
-        .map(mapper::userToUserReadDTO)
-        .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
+                .map(mapper::userToUserReadDTO)
+                .orElseThrow(() -> new RuntimeException("Error creating user" + entity.getUsername()));
     }
-    
+
     @Transactional
     public void confirmRegistration(String token) {
         try {
@@ -103,7 +102,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             log.error("Error confirming registration", e);
         }
     }
-    
+
     private void sendWelcomeEMail(User user, String token) {
         try {
             mailService.sendMail(user.getFirstName(), user.getEmail(), token);
@@ -111,54 +110,53 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             log.error("Error sending mail", e);
         }
     }
-    
-    
+
     @Transactional(readOnly = true)
     @Override
     public UserReadDTO read(Long id) {
         return mapper.userToUserReadDTO(userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Error reading user" + id)));
+                .orElseThrow(() -> new RuntimeException("Error reading user" + id)));
     }
-    
+
     @Transactional(readOnly = true)
     @Override
     public Page<UserReadDTO> readAll(int page, int size, String sort, UserFilter filter) {
         Specification<User> specification = Specification.where(null);
-        
+
         if (filter != null) {
             specification = specification
-            .and(filter.getUsername() != null && !filter.getUsername().isEmpty()
-            ? UserSpecification.usernameLike(filter.getUsername())
-            : null)
-            .and(filter.getEmail() != null && !filter.getEmail().isEmpty()
-            ? UserSpecification.emailLike(filter.getEmail())
-            : null)
-            // .and(filter.getRole() != null
-            // ? UserSpecification.roleEquals(filter.getRole())
-            // : null)
-            .and(filter.getFirstName() != null && !filter.getFirstName().isEmpty()
-            ? UserSpecification.firstNameLike(filter.getFirstName())
-            : null)
-            .and(filter.getLastName() != null && !filter.getLastName().isEmpty()
-            ? UserSpecification.lastNameLike(filter.getLastName())
-            : null)
-            .and(filter.getPhoneNumber() != null && !filter.getPhoneNumber().isEmpty()
-            ? UserSpecification.phoneNumberLike(filter.getPhoneNumber())
-            : null)
-            .and(filter.getEnabled() != null ? UserSpecification.activeEquals(filter.getEnabled()) : null)
-            .and(filter.getAddress() != null && !filter.getAddress().isEmpty()
-            ? UserSpecification.addressLike(filter.getAddress())
-            : null);
+                    .and(filter.getUsername() != null && !filter.getUsername().isEmpty()
+                            ? UserSpecification.usernameLike(filter.getUsername())
+                            : null)
+                    .and(filter.getEmail() != null && !filter.getEmail().isEmpty()
+                            ? UserSpecification.emailLike(filter.getEmail())
+                            : null)
+                    // .and(filter.getRole() != null
+                    // ? UserSpecification.roleEquals(filter.getRole())
+                    // : null)
+                    .and(filter.getFirstName() != null && !filter.getFirstName().isEmpty()
+                            ? UserSpecification.firstNameLike(filter.getFirstName())
+                            : null)
+                    .and(filter.getLastName() != null && !filter.getLastName().isEmpty()
+                            ? UserSpecification.lastNameLike(filter.getLastName())
+                            : null)
+                    .and(filter.getPhoneNumber() != null && !filter.getPhoneNumber().isEmpty()
+                            ? UserSpecification.phoneNumberLike(filter.getPhoneNumber())
+                            : null)
+                    .and(filter.getEnabled() != null ? UserSpecification.activeEquals(filter.getEnabled()) : null)
+                    .and(filter.getAddress() != null && !filter.getAddress().isEmpty()
+                            ? UserSpecification.addressLike(filter.getAddress())
+                            : null);
         }
-        
+
         try {
             return userRepository.findAll(specification, PageRequest.of(page, size))
-            .map(mapper::userToUserReadDTO);
+                    .map(mapper::userToUserReadDTO);
         } catch (RuntimeException e) {
             throw new RuntimeException("Error reading users", e);
         }
     }
-    
+
     @Transactional
     @Override
     public UserReadDTO update(Long id, UserCreateUpdateDTO entity) {
@@ -176,8 +174,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             throw new EntityNotFoundException("Error updating user" + id);
         });
     }
-    
-    
+
     @Transactional
     @Override
     public void delete(Long id) {
@@ -187,27 +184,29 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             throw new RuntimeException("Error deleting user" + id, e);
         }
     }
-    
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username + " not found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
         if (Boolean.FALSE.equals(user.getEnabled())) {
             throw new UsernameNotFoundException(username + " not activated");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
     }
-    
+
     public String generateToken(AuthRequest user) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         } catch (AuthenticationException e) {
             return e.getMessage();
         }
-        
+
         UserDetails userDetails = loadUserByUsername(user.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
         return token;
     }
-    
-}
 
+}
