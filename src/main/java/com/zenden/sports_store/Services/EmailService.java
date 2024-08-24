@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.zenden.sports_store.Configs.EmailServiceConfig;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private static final String EMAIL_TEMPLATE = "welcome-email";
-
-    private static final String IMAGE_PATH = "src/main/resources/images/American Psycho.jpg";
-
-    private static final String IMAGE_ID = "imageId";
+    private final EmailServiceConfig emailServiceConfig;
 
     private final JavaMailSender javaMailSender;
 
@@ -49,15 +47,15 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("username", username);
         context.setVariable("token", token);
-        return templateEngine.process(EMAIL_TEMPLATE, context);
+        return templateEngine.process(emailServiceConfig.getEMAIL_TEMPLATE(), context);
     }
 
     private void addImage(MimeMessageHelper helper) throws MessagingException {
-        FileSystemResource image = new FileSystemResource(new File(IMAGE_PATH));
+        FileSystemResource image = new FileSystemResource(new File(emailServiceConfig.getIMAGE_PATH()));
         if (image.exists()) {
-            helper.addInline(IMAGE_ID, image);
+            helper.addInline(emailServiceConfig.getIMAGE_ID(), image);
         } else {
-            log.error("Изображение не найдено по пути: " + IMAGE_PATH);
+            log.error("Изображение не найдено по пути: " + emailServiceConfig.getIMAGE_PATH());
         }
     }
 

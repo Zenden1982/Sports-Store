@@ -205,8 +205,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
         }
 
         UserDetails userDetails = loadUserByUsername(user.getUsername());
-        String token = jwtTokenUtils.generateToken(userDetails);
-        return token;
+        return jwtTokenUtils.generateToken(userDetails);
     }
 
 }

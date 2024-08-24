@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "email.service.IMAGE_PATH",
+  "type": "java.lang.String",
+  "description": "Устанавливает путь для изображения в письме"
+}]}

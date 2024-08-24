@@ -54,7 +54,8 @@ public class UserController {
     }
 
     @PostMapping("/username")
-    public String userData(String token) {
+    public String userData(@RequestHeader("Authorization") String header) {
+        String token = header.substring(7);
         return jwt.getUsernameFromToken(token);
     }
 
