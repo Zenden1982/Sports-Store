@@ -1,8 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/sports_store
-        username: postgres
-        password: 123
+        url: jdbc:postgresql://pg-15ec5d05-nikita-6d6f.f.aivencloud.com:15336/defaultdb?ssl=require&user=avnadmin&password=AVNS_tDJbvB9RGbMQgu-O4q8
     jpa:
         show-sql: true
         properties:
