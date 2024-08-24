@@ -17,5 +17,8 @@ WORKDIR /app
 # Копируем собранный .jar файл из предыдущего этапа
 COPY --from=build /app/target/sports-store-0.2.jar /app/sports-store-0.2.jar
 
+# Открываем порт 8080
+EXPOSE 8080
+
 # Устанавливаем точку входа
 ENTRYPOINT ["java", "-jar", "/app/sports-store-0.2.jar"]
