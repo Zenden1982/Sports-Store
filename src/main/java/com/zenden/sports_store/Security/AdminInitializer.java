@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+// @Profile("dev")
 public class AdminInitializer implements ApplicationRunner {
 
     @Autowired
@@ -20,7 +21,6 @@ public class AdminInitializer implements ApplicationRunner {
     @Autowired
     private User admin;
 
-    
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -28,7 +28,7 @@ public class AdminInitializer implements ApplicationRunner {
             log.info("Admin user created with login: admin and password: admin");
             userRepository.save(admin);
         }
-        
+
         else {
             log.info("Admin user already exists with login: admin and password: admin");
         }
