@@ -42,13 +42,20 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
-                .authorizeHttpRequests((requests) -> requests
+                .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
-                        .requestMatchers("/api/orders/**").hasRole("ADMIN"))
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/users/info", true))
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.decoder(jwtDecoder())) // Использование JWT для аутентификации
+                        .requestMatchers("/api/orders/**").hasRole("ADMIN")
+                        .anyRequest().permitAll() // Настроить доступ к другим запросам
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/api/users/info", true)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(oidcUserService())
+                                .userService(oauth2UserService())))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
@@ -98,5 +105,4 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
 }
