@@ -10,13 +10,12 @@ import com.zenden.sports_store.Classes.Role;
 import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Repositories.RoleRepository;
 
-
 @Configuration
 public class AdminConfig {
 
     @Autowired
     private RoleRepository roleRepository;
-    
+
     @Bean("admin")
     public User admin() {
         User user = new User();
@@ -28,12 +27,11 @@ public class AdminConfig {
         user.setPhoneNumber("admin");
         user.setAddress("admin");
         Role role = new Role();
-        if (!roleRepository.findByName("ROLE_ADMIN").isPresent()){
+        if (!roleRepository.findByName("ROLE_ADMIN").isPresent()) {
 
             role = new Role(0, "ROLE_ADMIN");
             roleRepository.saveAndFlush(role);
-        }
-        else{
+        } else {
             role = roleRepository.findByName("ROLE_ADMIN").get();
         }
         user.setRoles(List.of(role));
