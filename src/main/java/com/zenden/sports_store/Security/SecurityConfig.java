@@ -34,11 +34,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
-                .authorizeHttpRequests((requests) -> requests
+                .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
                         .requestMatchers("/api/orders/**").hasRole("ADMIN")
-                        .anyRequest().permitAll())
-                .authenticationProvider(authenticationProvider())
+                        .anyRequest().permitAll() // Настроить доступ к другим запросам
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
