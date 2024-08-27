@@ -3,9 +3,11 @@ package com.zenden.sports_store.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.zenden.sports_store.Services.UserService;
 
@@ -36,6 +37,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").hasAuthority("SCOPE_read")
                         .requestMatchers("/api/orders/**").hasRole("ADMIN")
                         .anyRequest().permitAll() // Настроить доступ к другим запросам
                 )
@@ -44,7 +46,9 @@ public class SecurityConfig {
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+        // .addFilterBefore(jwtRequestFilter,
+        // UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
