@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.status(200).body(userService.generateToken(user));
     }
 
-    @PostMapping("/username")
+    @GetMapping("/username")
     public String userData(@RequestHeader("Authorization") String header) {
         String token = header.substring(7);
         return jwt.getUsernameFromToken(token);
