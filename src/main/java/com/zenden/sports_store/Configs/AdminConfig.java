@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.zenden.sports_store.Artemis.JmsOrderMessagingService;
 import com.zenden.sports_store.Classes.Role;
 import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Repositories.RoleRepository;
@@ -15,6 +16,9 @@ public class AdminConfig {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    JmsOrderMessagingService jmsOrderMessagingService;
 
     @Bean("admin")
     public User admin() {

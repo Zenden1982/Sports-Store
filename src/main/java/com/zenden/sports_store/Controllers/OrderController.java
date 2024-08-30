@@ -18,8 +18,6 @@ import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
 import com.zenden.sports_store.Services.OrderService;
 
-
-
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -29,6 +27,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderReadDTO> create(@RequestBody OrderCreateUpdateDTO order) {
+
         return ResponseEntity.status(201).body(orderService.create(order));
     }
 

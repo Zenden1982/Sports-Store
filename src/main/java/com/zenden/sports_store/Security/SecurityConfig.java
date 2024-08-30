@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").hasAuthority("SCOPE_read")
-                        .requestMatchers("/api/orders/**").hasRole("ADMIN")
+                        // .requestMatchers("/api/orders/**").hasRole("ADMIN")
                         .anyRequest().permitAll() // Настроить доступ к другим запросам
                 )
                 .sessionManagement(session -> session
