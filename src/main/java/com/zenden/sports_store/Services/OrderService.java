@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenden.sports_store.Artemis.JmsOrderMessagingService;
+import com.zenden.sports_store.Classes.MessageClass;
 import com.zenden.sports_store.Classes.Order;
 import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.Product;
@@ -61,7 +62,8 @@ public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpda
             orderItemRepository.saveAndFlush(orderItem);
 
         });
-        jmsOrderMessagingService.sendOrder(order);
+        MessageClass messageClass = new MessageClass();
+        messageClass.setMessage("Order created");
         return orderMapper.orderToOrderReadDTO(order);
 
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zenden.sports_store.Artemis.JmsOrderMessagingService;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
@@ -24,6 +25,14 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    JmsOrderMessagingService jmsOrderMessagingService;
+
+    @PostMapping("/test")
+    public void test() {
+        jmsOrderMessagingService.sendAndConvertOrder();
+    }
 
     @PostMapping
     public ResponseEntity<OrderReadDTO> create(@RequestBody OrderCreateUpdateDTO order) {

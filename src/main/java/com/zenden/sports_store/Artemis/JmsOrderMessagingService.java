@@ -16,8 +16,8 @@ public class JmsOrderMessagingService {
         jmsTemplate.convertAndSend("order", order);
     }
 
-    public void sendAndConvertOrder(Order order) {
-        jmsTemplate.convertAndSend("order", order, message -> {
+    public void sendAndConvertOrder() {
+        jmsTemplate.convertAndSend("order", "Hello", message -> {
             message.setStringProperty("X_ORDER_SOURCE", "WEB");
             return message;
         });
