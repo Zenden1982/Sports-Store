@@ -42,7 +42,7 @@ public class ControllerAspect {
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
 
-        log.info("Executing method: {} with arguments: кака {}", methodName, args);
+        log.info("Executing method: {} with arguments: {}", methodName, args);
 
         try {
             Object result = joinPoint.proceed();
