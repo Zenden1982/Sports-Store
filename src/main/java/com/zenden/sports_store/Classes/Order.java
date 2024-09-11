@@ -1,5 +1,6 @@
 package com.zenden.sports_store.Classes;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -21,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "orders")
-public class Order extends BaseEntity {
+public class Order extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,6 +35,6 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 }

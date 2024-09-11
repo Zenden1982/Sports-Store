@@ -18,6 +18,7 @@ import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Services.ProductService;
+import com.zenden.sports_store.Services.RabbitOrderMessagingService;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -28,13 +29,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private RabbitOrderMessagingService rabbitOrderMessagingService;
+
     @PostMapping
     public ResponseEntity<ProductReadDTO> create(@RequestBody ProductCreateUpdateDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(entity));
     }
 
+    @GetMapping("/test")
+    public void create() {
+        rabbitOrderMessagingService.sendOrder();
+    }
+
     @PostMapping("/all")
-    @Operation(summary = "Получить все продукты", description="В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
+    @Operation(summary = "Получить все продукты", description = "В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "productName") String sort,
@@ -43,7 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить продукт по ID", description="В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
+    @Operation(summary = "Получить продукт по ID", description = "В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<ProductReadDTO> read(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.read(id));
     }
