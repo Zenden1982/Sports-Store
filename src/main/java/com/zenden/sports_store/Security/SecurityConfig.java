@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
-                        .requestMatchers("/api/orders/**").hasRole("ADMIN")
+                        // .requestMatchers("/api/orders/**").hasRole("ADMIN")
                         .anyRequest().permitAll() // Настроить доступ к другим запросам
                 )
                 .sessionManagement(session -> session

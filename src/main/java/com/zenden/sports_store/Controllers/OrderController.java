@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
+import com.zenden.sports_store.Services.Kafka;
 import com.zenden.sports_store.Services.OrderService;
-
-
 
 @RestController
 @RequestMapping("/api/orders")
@@ -27,9 +26,17 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private Kafka kafka;
+
     @PostMapping
     public ResponseEntity<OrderReadDTO> create(@RequestBody OrderCreateUpdateDTO order) {
         return ResponseEntity.status(201).body(orderService.create(order));
+    }
+
+    @PostMapping("/test")
+    public void test() {
+        kafka.sendOrder("test");
     }
 
     @GetMapping("/{id}")
