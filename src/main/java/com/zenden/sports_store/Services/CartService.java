@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.zenden.sports_store.Classes.Cart;
 import com.zenden.sports_store.Classes.CartItem;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.CartCreateDTO;
 import com.zenden.sports_store.Classes.DTO.CartReadDTO;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Mapper.CartMapper;
 import com.zenden.sports_store.Repositories.CartItemRepository;
 import com.zenden.sports_store.Repositories.CartRepository;
@@ -37,6 +37,9 @@ public class CartService {
     }
 
     public void create(CartCreateDTO cartCreateDTO) {
+        if (cartRepository.findByUserId(cartCreateDTO.getUserId()).isPresent()) {
+            throw new RuntimeException("Cart already exists for user " + cartCreateDTO.getUserId());
+        }
         Cart cart = cartMapper.cartCreateDTOtoCart(cartCreateDTO);
         cart.setTotalPrice(0.0);
         cart.setCartItems(null);

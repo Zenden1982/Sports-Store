@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenden.sports_store.Classes.AuthRequest;
+import com.zenden.sports_store.Classes.Cart;
 import com.zenden.sports_store.Classes.DTO.UserCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.UserReadDTO;
 import com.zenden.sports_store.Classes.Role;
@@ -30,6 +31,7 @@ import com.zenden.sports_store.Filters.User.UserFilter;
 import com.zenden.sports_store.Filters.User.UserSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.UserMapper;
+import com.zenden.sports_store.Repositories.CartRepository;
 import com.zenden.sports_store.Repositories.RoleRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 import com.zenden.sports_store.Security.JwtTokenUtils;
@@ -48,6 +50,9 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
 
     @Autowired
     private UserMapper mapper;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -98,6 +103,7 @@ public class UserService implements TwoDtoService<UserReadDTO, UserCreateUpdateD
             user.setEnabled(true);
             user.setRegistrationToken(null);
             userRepository.save(user);
+            cartRepository.save(new Cart(user, 0.0, null));
         } catch (EntityNotFoundException e) {
             log.error("Error confirming registration", e);
         }
