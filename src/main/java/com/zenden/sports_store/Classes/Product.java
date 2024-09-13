@@ -20,33 +20,36 @@ import lombok.EqualsAndHashCode;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
-    @Column(unique = true, nullable = false, length=50)
+    @Column(unique = true, nullable = false, length = 50)
     private String productName;
 
-    @Column(nullable = false, length=100)
+    @Column(nullable = false, length = 100)
     private String productDescription;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    //@Column(nullable = false)
+    // @Column(nullable = false)
     private Double price;
 
     @Column(nullable = false)
     private int stock;
-    
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images;
-    
-    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Discount> discounts;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
 
 }

@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/all")
-    @Operation(summary = "Получить все продукты", description="В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
+    @Operation(summary = "Получить все продукты", description = "В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "productName") String sort,
@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить продукт по ID", description="В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
+    @Operation(summary = "Получить продукт по ID", description = "В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
     public ResponseEntity<ProductReadDTO> read(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.read(id));
     }
@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
