@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
 import com.zenden.sports_store.Repositories.DiscountRepository;
 
-
 //Позволяет выводить цену продукта со скидкой и без через Handler
 @ControllerAdvice
 public class DiscountHandler implements ResponseBodyAdvice<Object> {
@@ -59,4 +58,3 @@ public class DiscountHandler implements ResponseBodyAdvice<Object> {
                         - (productReadDTO.getPrice() * discount.getPercentage() / 100)));
     }
 }
-
