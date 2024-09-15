@@ -18,6 +18,9 @@ public class FileWriterIntegrationConfigDSL {
                 .from(MessageChannels.direct("textInputChannel"))
                 .<String, String>transform(text -> text.toUpperCase())
                 .<String>filter(text -> text.contains("SIA6"))
+                .route(p -> {
+
+                })
                 .handle(Files
                         .outboundAdapter(new File("tmp/sia6/files"))
                         .fileExistsMode(FileExistsMode.APPEND)

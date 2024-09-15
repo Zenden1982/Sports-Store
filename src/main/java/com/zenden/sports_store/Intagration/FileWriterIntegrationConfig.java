@@ -1,12 +1,14 @@
 package com.zenden.sports_store.Intagration;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.Router;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.annotation.Splitter;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.core.GenericTransformer;
@@ -60,12 +62,15 @@ public class FileWriterIntegrationConfig {
 
     @Bean
     public MessageChannel oddChangel() {
-        return new MessageChannel() {
-            @Override
-            public boolean send(Message<?> message, long l) {
-                return false;
-            }
-        };
+        return new PublishSubscribeChannel();
     }
 
+    @Bean
+    @Splitter(inputChannel = "textFileChanngel", outputChannel = "splitChannel")
+    public Collection<Object> splitMessage(Message<?> message) {
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(message.getPayload());
+        list.add(message.getHeaders());
+        return list;
+    }
 }
