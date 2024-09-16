@@ -6,8 +6,10 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.3</version>
+		
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>com.zenden</groupId>
 	<artifactId>sports-store</artifactId>
 	<version>0.2</version>
@@ -152,10 +154,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>ru.loolzaaa</groupId>
+			<artifactId>youkassa-sdk-java</artifactId>
+			<version>0.0.2</version>
+		</dependency>
 		
 	</dependencies>
 
+	
 	<build>
 		<plugins>
 			<plugin>
