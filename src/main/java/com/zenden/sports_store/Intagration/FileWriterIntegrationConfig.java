@@ -17,6 +17,7 @@ import org.springframework.integration.file.support.FileExistsMode;
 import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHandler;
 
 //@Configuration
 public class FileWriterIntegrationConfig {
@@ -72,5 +73,13 @@ public class FileWriterIntegrationConfig {
         list.add(message.getPayload());
         list.add(message.getHeaders());
         return list;
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "splitChannel")
+    public MessageHandler sysoutHandler() {
+        return message -> {
+            System.out.println(message);
+        };
     }
 }
