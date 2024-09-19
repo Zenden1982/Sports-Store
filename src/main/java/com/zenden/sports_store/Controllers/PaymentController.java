@@ -21,8 +21,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create-payment")
-    public Payment createPayment(@RequestParam String value, @RequestParam String currency) throws Exception {
-        return paymentService.createPayment(value, currency);
+    public Payment createPayment(@RequestParam Double value, @RequestParam String currency, @RequestParam Long orderId)
+            throws Exception {
+        return paymentService.createPayment(value, currency, orderId);
     }
 
     @GetMapping("/payment-status/{paymentId}")
@@ -34,12 +35,6 @@ public class PaymentController {
             PaymentProcessor paymentProcessor = new PaymentProcessor(paymentService.getApiClient());
             payment = paymentProcessor.capture(payment.getId(), Payment.builder().build(), null);
 
-        }
-
-        // Если платеж успешен, создаем заказ
-        if ("succeeded".equals(payment.getStatus())) {
-            // createOrder(paymentId);
-            return ResponseEntity.ok("Payment succeeded");
         }
 
         return ResponseEntity.ok(payment.getStatus());

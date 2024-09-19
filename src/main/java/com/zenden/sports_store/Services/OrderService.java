@@ -11,23 +11,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zenden.sports_store.Classes.Order;
+import com.zenden.sports_store.Classes.OrderItem;
+import com.zenden.sports_store.Classes.PaymentInfo;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Classes.Enum.OrderStatus;
-import com.zenden.sports_store.Classes.Order;
-import com.zenden.sports_store.Classes.OrderItem;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
 import com.zenden.sports_store.Filters.Order.OrderSpecification;
-import com.zenden.sports_store.Interfaces.TwoDtoService;
 import com.zenden.sports_store.Mapper.OrderMapper;
 import com.zenden.sports_store.Repositories.OrderItemRepository;
 import com.zenden.sports_store.Repositories.OrderRepository;
+import com.zenden.sports_store.Repositories.PaymentRepository;
 import com.zenden.sports_store.Repositories.ProductRepository;
+
+import ru.loolzaaa.youkassa.model.Payment;
+
 @Service
 @Component
 @Transactional
-public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpdateDTO, OrderFilter>{
+public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -35,6 +39,11 @@ public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpda
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -42,41 +51,52 @@ public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpda
     @Autowired
     private OrderMapper orderMapper;
 
-    @Override
-    public OrderReadDTO create(OrderCreateUpdateDTO entity) {
+    public PaymentInfo create(OrderCreateUpdateDTO entity) {
+        Order order = orderMapper.orderCreateUpdateDTOToOrder(entity);
 
-            Order order =  orderRepository.saveAndFlush(orderMapper.orderCreateUpdateDTOToOrder(entity));
-            entity.getOrderItemIds().forEach(object -> {
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrder(order);
-                Product product = productRepository.findById(object.getProductId()).get();
-                orderItem.setProduct(product);
-                product.setStock(product.getStock() - object.getQuantity());
-                productRepository.saveAndFlush(product);
-                orderItem.setQuantity(object.getQuantity());
-                orderItemRepository.saveAndFlush(orderItem);
-                
-            });
-            return orderMapper.orderToOrderReadDTO(order);
+        Payment payment = null;
+        try {
+            payment = paymentService.createPayment(order.getTotalPrice(), "RUB", order.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating payment for order" + order.getId(), e);
+        }
+
+        PaymentInfo paymentInfo = new PaymentInfo(payment.getId(), payment.getStatus(), order);
+        order.setPayment(paymentInfo);
+        orderRepository.saveAndFlush(order);
+        paymentRepository.saveAndFlush(paymentInfo);
+
+        entity.getOrderItemIds().forEach(object -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            Product product = productRepository.findById(object.getProductId()).get();
+            orderItem.setProduct(product);
+            product.setStock(product.getStock() - object.getQuantity());
+            productRepository.saveAndFlush(product);
+            orderItem.setQuantity(object.getQuantity());
+            orderItemRepository.saveAndFlush(orderItem);
+
+        });
+
+        return paymentInfo;
 
     }
 
-    @Override
     public OrderReadDTO read(Long id) {
-        return orderMapper.orderToOrderReadDTO(orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading order" + id)));
+        return orderMapper.orderToOrderReadDTO(
+                orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading order" + id)));
     }
 
-    @Override
     public Page<OrderReadDTO> readAll(int page, int size, String sort, OrderFilter filter) {
         Specification<Order> spec = Specification.where(null);
-        if (filter != null){
+        if (filter != null) {
             spec = spec.and(filter.getStatus() != null ? OrderSpecification.statusEquals(filter.getStatus()) : null);
             spec = spec.and(filter.getUserId() != null ? OrderSpecification.userEquals(filter.getUserId()) : null);
         }
-        return orderRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort))).map(orderMapper::orderToOrderReadDTO);
+        return orderRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
+                .map(orderMapper::orderToOrderReadDTO);
     }
 
-    @Override
     public OrderReadDTO update(Long id, OrderCreateUpdateDTO entity) {
         return orderRepository.findById(id).map(order -> {
             order.setTotalPrice(order.getTotalPrice());
@@ -99,7 +119,6 @@ public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpda
         });
     }
 
-    @Override
     public void delete(Long id) {
         try {
             orderRepository.deleteById(id);
@@ -107,6 +126,5 @@ public class OrderService implements TwoDtoService<OrderReadDTO, OrderCreateUpda
             throw new RuntimeException("Error deleting order" + id, e);
         }
     }
-
 
 }

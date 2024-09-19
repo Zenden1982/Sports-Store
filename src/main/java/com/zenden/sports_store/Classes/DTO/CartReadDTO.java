@@ -15,5 +15,4 @@ public class CartReadDTO {
 
     private List<CartItemReadDTO> cartItems;
 
-    // TODO Изменить ProductReadDTO на ItemCardsReadDTO
 }
