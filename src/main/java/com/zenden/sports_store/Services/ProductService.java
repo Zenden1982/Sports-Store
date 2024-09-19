@@ -49,10 +49,10 @@ public class ProductService implements TwoDtoService<ProductReadDTO, ProductCrea
     }
 
     @Override
-    // @Cacheable(value = "products", key = "#id")
+    @Cacheable(value = "products", key = "#id")
     public ProductReadDTO read(Long id) {
         return productRepository.findById(id).map(productMapper::productToProductReadDTO).map(product -> {
-            product.setPrice(BigDecimal.valueOf(exchangeRateService.getActualExchangeRate(product.getPrice()))
+            product.setPrice(BigDecimal.valueOf(product.getPrice())
                     .setScale(2, RoundingMode.HALF_UP).doubleValue());
             return product;
         })
