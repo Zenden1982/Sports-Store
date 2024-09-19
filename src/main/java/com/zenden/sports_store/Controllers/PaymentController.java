@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zenden.sports_store.Classes.PaymentInfo;
 import com.zenden.sports_store.Services.PaymentService;
 
 import lombok.AllArgsConstructor;
@@ -39,4 +40,10 @@ public class PaymentController {
 
         return ResponseEntity.ok(payment.getStatus());
     }
+
+    @GetMapping("/get-payment-by-order/{orderId}")
+    public ResponseEntity<PaymentInfo> getMethodName(@PathVariable Long orderId) {
+        return ResponseEntity.ok().body(paymentService.getPaymentInfoByOrder(orderId));
+    }
+
 }

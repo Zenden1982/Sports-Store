@@ -47,7 +47,7 @@ public class PaymentService {
         PaymentProcessor paymentProcessor = new PaymentProcessor(apiClient);
         Payment payment = paymentProcessor.findById(paymentId);
         PaymentInfo paymentInfo = paymentRepository.findById(paymentId).get();
-        if (payment.getStatus().equals(paymentInfo.getStatus())) {
+        if (!payment.getStatus().equals(paymentInfo.getStatus())) {
             paymentInfo.setStatus(payment.getStatus());
             paymentRepository.save(paymentInfo);
         }

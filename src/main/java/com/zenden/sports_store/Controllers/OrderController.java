@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zenden.sports_store.Classes.PaymentInfo;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
@@ -27,7 +26,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<PaymentInfo> create(@RequestBody OrderCreateUpdateDTO order) {
+    public ResponseEntity<OrderReadDTO> create(@RequestBody OrderCreateUpdateDTO order) {
         return ResponseEntity.status(201).body(orderService.create(order));
     }
 

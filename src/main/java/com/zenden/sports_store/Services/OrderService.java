@@ -51,7 +51,7 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    public PaymentInfo create(OrderCreateUpdateDTO entity) {
+    public OrderReadDTO create(OrderCreateUpdateDTO entity) {
         Order order = orderMapper.orderCreateUpdateDTOToOrder(entity);
 
         Payment payment = null;
@@ -61,7 +61,8 @@ public class OrderService {
             throw new RuntimeException("Error creating payment for order" + order.getId(), e);
         }
 
-        PaymentInfo paymentInfo = new PaymentInfo(payment.getId(), payment.getStatus(), order);
+        PaymentInfo paymentInfo = new PaymentInfo(payment.getId(), payment.getStatus(),
+                payment.getConfirmation().getConfirmationUrl(), order);
         order.setPayment(paymentInfo);
         orderRepository.saveAndFlush(order);
         paymentRepository.saveAndFlush(paymentInfo);
@@ -78,7 +79,7 @@ public class OrderService {
 
         });
 
-        return paymentInfo;
+        return orderMapper.orderToOrderReadDTO(order);
 
     }
 

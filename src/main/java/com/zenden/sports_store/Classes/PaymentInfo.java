@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Classes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -24,6 +26,7 @@ public class PaymentInfo {
     private String url;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private Order order;
 
