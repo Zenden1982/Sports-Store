@@ -35,7 +35,7 @@ public class PaymentService {
                 .description("Оплата заказа")
                 .confirmation(Confirmation.builder()
                         .type(Confirmation.Type.REDIRECT)
-                        .returnUrl("http://localhost:8080/swagger-ui/index.html#")
+                        .returnUrl("http://localhost:5173/")
                         .build())
                 .build(), null);
 
@@ -57,4 +57,5 @@ public class PaymentService {
     public PaymentInfo getPaymentInfoByOrder(Long orderId) {
         return paymentRepository.findByOrderId(orderId).get();
     }
+
 }
