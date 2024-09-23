@@ -21,6 +21,7 @@ import com.zenden.sports_store.Classes.Enum.OrderStatus;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
 import com.zenden.sports_store.Filters.Order.OrderSpecification;
 import com.zenden.sports_store.Mapper.OrderMapper;
+import com.zenden.sports_store.Repositories.CartRepository;
 import com.zenden.sports_store.Repositories.OrderItemRepository;
 import com.zenden.sports_store.Repositories.OrderRepository;
 import com.zenden.sports_store.Repositories.PaymentRepository;
@@ -38,6 +39,9 @@ public class OrderService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -71,12 +75,17 @@ public class OrderService {
         orderRepository.saveAndFlush(order);
         paymentRepository.saveAndFlush(paymentInfo);
 
+        cartRepository.deleteByUserId(order.getUser().getId());
+
         entity.getOrderItemIds().forEach(object -> {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             Product product = productRepository.findById(object.getProductId()).get();
             orderItem.setProduct(product);
             product.setStock(product.getStock() - object.getQuantity());
+            if (product.getStock() < 0) {
+                product.setStock(0);
+            }
             productRepository.saveAndFlush(product);
             orderItem.setQuantity(object.getQuantity());
             orderItemRepository.saveAndFlush(orderItem);

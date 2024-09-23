@@ -1,7 +1,6 @@
 package com.zenden.sports_store.Services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,19 +26,15 @@ import ru.loolzaaa.youkassa.processors.PaymentProcessor;
 public class PaymentService {
 
     private final ApiClient apiClient;
-
     private final PaymentRepository paymentRepository;
-
     private final OrderRepository orderRepository;
 
-    List<String> statuses = new ArrayList<>();
+    private final List<String> statuses = List.of("pending", "waiting_for_capture");
 
-    // Создание платежа
     public Payment createPayment(Double value, String currency, Long orderId) throws Exception {
         PaymentProcessor paymentProcessor = new PaymentProcessor(apiClient);
-
         String valueStr = String.valueOf(value);
-        Payment payment = paymentProcessor.create(Payment.builder()
+        return paymentProcessor.create(Payment.builder()
                 .amount(Amount.builder().value(valueStr).currency(currency).build())
                 .description("Оплата заказа")
                 .confirmation(Confirmation.builder()
@@ -47,54 +42,45 @@ public class PaymentService {
                         .returnUrl("http://localhost:5173/")
                         .build())
                 .build(), null);
-
-        return payment;
     }
 
-    // Получение информации о платеже
     public PaymentInfo getPayment(String paymentId) throws Exception {
-        PaymentInfo paymentInfo = paymentRepository.findById(paymentId).get();
-        checkPayment(paymentInfo);
-        return paymentInfo;
+        return checkPayment(paymentRepository.findById(paymentId).orElseThrow());
     }
 
     public PaymentInfo getPaymentInfoByOrder(Long orderId) {
-        return checkPayment(paymentRepository.findByOrderId(orderId).get());
+        return checkPayment(paymentRepository.findByOrderId(orderId).orElseThrow());
     }
 
     @Scheduled(fixedRate = 5000)
     public void checkPayemntStatus() {
-        statuses.add("pending");
-        statuses.add("waiting_for_capture");
-
         List<PaymentInfo> paymentInfoList = paymentRepository.findByStatusIn(statuses);
-        if (!paymentInfoList.isEmpty()) {
-            for (PaymentInfo paymentInfo : paymentInfoList) {
-                checkPayment(paymentInfo);
-            }
-
-        }
-    }
-
-    public void equalsPayments(PaymentInfo paymentInfo, Payment payment) {
-        if (!payment.getStatus().equals(paymentInfo.getStatus())) {
-            paymentInfo.setStatus(payment.getStatus());
-            paymentRepository.save(paymentInfo);
-        }
+        paymentInfoList.forEach(this::checkPayment);
     }
 
     public PaymentInfo checkPayment(PaymentInfo paymentInfo) {
         if (LocalDateTime.now().isAfter(paymentInfo.getCreatedDate().plusDays(1))) {
             paymentInfo.setStatus("canceled");
             paymentRepository.save(paymentInfo);
+            return paymentInfo;
         }
+
         PaymentProcessor paymentProcessor = new PaymentProcessor(apiClient);
         Payment payment = paymentProcessor.findById(paymentInfo.getId());
-        if (payment.getStatus().equals("waiting_for_capture")) {
-            payment = paymentProcessor.capture(payment.getId(), Payment.builder().build(), null);
 
+        if ("waiting_for_capture".equals(payment.getStatus())) {
+            payment = paymentProcessor.capture(payment.getId(), Payment.builder().build(), null);
         }
-        equalsPayments(paymentInfo, payment);
+
+        updatePaymentInfoStatus(paymentInfo, payment);
+
         return paymentInfo;
+    }
+
+    private void updatePaymentInfoStatus(PaymentInfo paymentInfo, Payment payment) {
+        if (!payment.getStatus().equals(paymentInfo.getStatus())) {
+            paymentInfo.setStatus(payment.getStatus());
+            paymentRepository.save(paymentInfo);
+        }
     }
 }
