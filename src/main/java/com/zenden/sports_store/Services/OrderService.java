@@ -61,8 +61,12 @@ public class OrderService {
             throw new RuntimeException("Error creating payment for order" + order.getId(), e);
         }
 
-        PaymentInfo paymentInfo = new PaymentInfo(payment.getId(), payment.getStatus(),
-                payment.getConfirmation().getConfirmationUrl(), order);
+        PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setId(payment.getId());
+        paymentInfo.setStatus(payment.getStatus());
+        paymentInfo.setUrl(payment.getConfirmation().getConfirmationUrl());
+        paymentInfo.setOrder(order);
+
         order.setPayment(paymentInfo);
         orderRepository.saveAndFlush(order);
         paymentRepository.saveAndFlush(paymentInfo);
