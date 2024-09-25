@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zenden.sports_store.Classes.Cart;
 import com.zenden.sports_store.Classes.Order;
 import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.PaymentInfo;
@@ -21,6 +22,7 @@ import com.zenden.sports_store.Classes.Enum.OrderStatus;
 import com.zenden.sports_store.Filters.Order.OrderFilter;
 import com.zenden.sports_store.Filters.Order.OrderSpecification;
 import com.zenden.sports_store.Mapper.OrderMapper;
+import com.zenden.sports_store.Repositories.CartItemRepository;
 import com.zenden.sports_store.Repositories.CartRepository;
 import com.zenden.sports_store.Repositories.OrderItemRepository;
 import com.zenden.sports_store.Repositories.OrderRepository;
@@ -42,6 +44,9 @@ public class OrderService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -75,7 +80,10 @@ public class OrderService {
         orderRepository.saveAndFlush(order);
         paymentRepository.saveAndFlush(paymentInfo);
 
-        cartRepository.deleteByUserId(order.getUser().getId());
+        Cart cart = cartRepository.findByUserId(entity.getUserId()).get();
+        cart.setTotalPrice(0.0);
+        cartRepository.saveAndFlush(cart);
+        cartItemRepository.deleteByCartId(cart.getId());
 
         entity.getOrderItemIds().forEach(object -> {
             OrderItem orderItem = new OrderItem();

@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -53,6 +54,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;

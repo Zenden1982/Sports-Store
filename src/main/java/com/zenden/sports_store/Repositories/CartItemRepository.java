@@ -8,4 +8,8 @@ import com.zenden.sports_store.Classes.CartItem;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findByCartId(Long cartId);
+
+    void deleteAllByCartId(Long cartId);
+
+    void deleteByCartId(Long cartId);
 }
