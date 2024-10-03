@@ -6,11 +6,11 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
-import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
 import com.zenden.sports_store.Classes.Order;
 import com.zenden.sports_store.Classes.OrderItem;
 import com.zenden.sports_store.Classes.Product;
+import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
+import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
 import com.zenden.sports_store.Repositories.OrderRepository;
 import com.zenden.sports_store.Repositories.ProductRepository;
 
@@ -32,12 +32,12 @@ public abstract class OrderItemMapper {
     public abstract OrderItem orderItemCreateUpdateDTOToOrderItem(OrderItemCreateUpdateDTO orderItemCreateUpdateDTO);
 
     @Named("order")
-    public Order finOrder(Long id) {
+    public Order findOrder(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 
     @Named("product")
-    public Product fProduct(Long id) {
+    public Product findProduct(Long id) {
         return productRepository.findById(id).orElse(null);
     }
 
