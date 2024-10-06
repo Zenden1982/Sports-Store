@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class UserSessionService {
 
-    private String currency = "RUB";
+    // private String currency = "RUB";
 }

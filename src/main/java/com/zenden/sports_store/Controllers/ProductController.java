@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,14 +39,16 @@ public class ProductController {
     public ResponseEntity<Page<ProductReadDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "productName") String sort,
-            @RequestBody ProductFiler filter) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.readAll(page, size, sort, filter));
+            @RequestBody ProductFiler filter,
+            @RequestHeader(value = "Currency", defaultValue = "RUB") String currency) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.readAll(page, size, sort, filter, currency));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить продукт по ID", description = "В Headers можно передать два параметра Discount:true/false и Currency:USD/EUR/KZT/RUB (по умолчанию RUB)")
-    public ResponseEntity<ProductReadDTO> read(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.read(id));
+    public ResponseEntity<ProductReadDTO> read(@PathVariable Long id,
+            @RequestHeader(value = "Currency", defaultValue = "RUB") String currency) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.read(id, currency));
     }
 
     @PutMapping("/{id}")

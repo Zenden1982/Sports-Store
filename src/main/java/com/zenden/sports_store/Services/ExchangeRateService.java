@@ -3,7 +3,6 @@ package com.zenden.sports_store.Services;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class ExchangeRateService {
-
-    @Autowired
-    private UserSessionService userSessionService;
 
     private static final String PATH = "/ExchangeRate.json";
 
@@ -39,8 +35,7 @@ public class ExchangeRateService {
         }
     }
 
-    public Double getActualExchangeRate(Double price) {
-        String currency = userSessionService.getCurrency();
+    public Double getActualExchangeRate(Double price, String currency) {
         return switch (currency) {
             case "USD" -> price / usd;
             case "EUR" -> price / eur;
