@@ -34,7 +34,7 @@ public class PaymentController {
     }
 
     @GetMapping("/get-payment-by-order/{orderId}")
-    public ResponseEntity<PaymentInfo> getMethodName(@PathVariable Long orderId) {
+    public ResponseEntity<PaymentInfo> geyByOrderId(@PathVariable Long orderId) {
         return ResponseEntity.ok().body(paymentService.getPaymentInfoByOrder(orderId));
     }
 
