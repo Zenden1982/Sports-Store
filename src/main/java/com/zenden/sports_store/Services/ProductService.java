@@ -49,8 +49,7 @@ public class ProductService {
     public ProductReadDTO read(Long id, String currency) {
         return productRepository.findById(id).map(productMapper::productToProductReadDTO).map(product -> {
             product.setPrice(BigDecimal
-                    .valueOf(product.getPrice()
-                            * exchangeRateService.getActualExchangeRate(product.getPrice(), currency))
+                    .valueOf(exchangeRateService.getActualExchangeRate(product.getPrice(), currency))
                     .setScale(2, RoundingMode.HALF_UP).doubleValue());
             return product;
         })
@@ -85,7 +84,9 @@ public class ProductService {
         try {
             return productRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
                     .map(productMapper::productToProductReadDTO).map(product -> {
-                        product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice(), currency));
+                        product.setPrice(BigDecimal
+                                .valueOf(exchangeRateService.getActualExchangeRate(product.getPrice(), currency))
+                                .setScale(2, RoundingMode.HALF_UP).doubleValue());
                         return product;
                     });
         } catch (RuntimeException e) {

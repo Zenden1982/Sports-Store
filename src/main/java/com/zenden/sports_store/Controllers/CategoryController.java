@@ -17,6 +17,8 @@ import com.zenden.sports_store.Classes.DTO.CategoryDTO;
 import com.zenden.sports_store.Filters.Category.CategoryFilter;
 import com.zenden.sports_store.Services.CategoryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -25,23 +27,23 @@ import lombok.AllArgsConstructor;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    
+
     @PostMapping
+    @Operation(summary = "Полученние данных о текущем аккаунте", security = @SecurityRequirement(name = "BearerAuth"))
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(entity));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> read(@PathVariable Long id) {
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.read(id));
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.read(id));
     }
 
     @PostMapping("/all")
     public ResponseEntity<Page<CategoryDTO>> readAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "categoryName") String sort,
-            @RequestBody CategoryFilter filter)
-        {
+            @RequestBody CategoryFilter filter) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.readAll(page, size, sort, filter));
     }
 

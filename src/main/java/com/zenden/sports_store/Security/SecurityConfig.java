@@ -3,6 +3,7 @@ package com.zenden.sports_store.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.disable()))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/users/info").authenticated()
-                        // .requestMatchers("/api/orders/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
                         .anyRequest().permitAll() // Настроить доступ к другим запросам
                 )
                 .sessionManagement(session -> session
