@@ -8,11 +8,12 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.zenden.sports_store.Classes.Order;
+import com.zenden.sports_store.Classes.Product;
+import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.OrderCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderReadDTO;
-import com.zenden.sports_store.Classes.Order;
-import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Repositories.ProductRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 
@@ -42,7 +43,8 @@ public abstract class OrderMapper {
     public Double mapTotalPrice(List<OrderItemCreateUpdateDTO> orderItemIds) {
         Double total = 0.0;
         for (OrderItemCreateUpdateDTO id : orderItemIds) {
-            total += productRepository.findById(id.getProductId()).get().getPrice();
+            Product product = productRepository.findById(id.getProductId()).get();
+            total += product.getPrice() * id.getQuantity();
         }
         return total;
     }
