@@ -6,9 +6,9 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zenden.sports_store.Classes.Cart;
+import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Classes.DTO.CartCreateDTO;
 import com.zenden.sports_store.Classes.DTO.CartReadDTO;
-import com.zenden.sports_store.Classes.User;
 import com.zenden.sports_store.Repositories.CartItemRepository;
 import com.zenden.sports_store.Repositories.UserRepository;
 import com.zenden.sports_store.Services.ProductService;

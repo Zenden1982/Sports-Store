@@ -2,7 +2,7 @@
 spring:
     datasource:
         driver-class-name: org.h2.Driver
-        url: jdbc:h2:file:~/test
+        url: jdbc:h2:file:~/test2
         username: sa
         password:
     h2:
