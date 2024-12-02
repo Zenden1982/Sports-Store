@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.zenden.sports_store.Classes.OrderItem;
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.OrderItemCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.OrderItemReadDTO;
+import com.zenden.sports_store.Classes.OrderItem;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemFilter;
 import com.zenden.sports_store.Filters.OrderItem.OrderItemSpecification;
 import com.zenden.sports_store.Interfaces.TwoDtoService;
@@ -31,11 +31,12 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
 
     @Autowired
     private OrderItemRepository orderItemRepository;
-    
+
     @Autowired
     private ProductRepository productRepository;
 
     @Override
+
     public OrderItemReadDTO create(OrderItemCreateUpdateDTO entity) {
         try {
             Optional<Product> product = productRepository.findById(entity.getProductId());
@@ -43,7 +44,8 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
                 product.get().setStock(product.get().getStock() - entity.getQuantity());
                 productRepository.saveAndFlush(product.get());
             }
-            return orderItemMapper.orderItemToOrderItemReadDTO(orderItemRepository.save(orderItemMapper.orderItemCreateUpdateDTOToOrderItem(entity)));
+            return orderItemMapper.orderItemToOrderItemReadDTO(
+                    orderItemRepository.save(orderItemMapper.orderItemCreateUpdateDTOToOrderItem(entity)));
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating order item");
         }
@@ -51,14 +53,17 @@ public class OrderItemService implements TwoDtoService<OrderItemReadDTO, OrderIt
 
     @Override
     public OrderItemReadDTO read(Long id) {
-        return  orderItemRepository.findById(id).map(orderItemMapper::orderItemToOrderItemReadDTO).orElseThrow(() -> new RuntimeException("Error reading order item" + id));
+        return orderItemRepository.findById(id).map(orderItemMapper::orderItemToOrderItemReadDTO)
+                .orElseThrow(() -> new RuntimeException("Error reading order item" + id));
     }
 
     @Override
     public Page<OrderItemReadDTO> readAll(int page, int size, String sort, OrderItemFilter filter) {
-        Specification<OrderItem> spec = Specification.where(filter.getOrderId() !=null
-            ? OrderItemSpecification.orderEquals(filter.getOrderId()) : null);
-        return orderItemRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort))).map(orderItemMapper::orderItemToOrderItemReadDTO);
+        Specification<OrderItem> spec = Specification.where(filter.getOrderId() != null
+                ? OrderItemSpecification.orderEquals(filter.getOrderId())
+                : null);
+        return orderItemRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
+                .map(orderItemMapper::orderItemToOrderItemReadDTO);
     }
 
     @Override
