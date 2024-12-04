@@ -28,8 +28,6 @@ public class PaymentController {
 
     @GetMapping("/payment-status/{paymentId}")
     public ResponseEntity<String> handleReturnUrl(@PathVariable String paymentId) throws Exception {
-        // Получаем информацию о платеже с помощью SDK YooKassa
-
         return ResponseEntity.ok(paymentService.getPayment(paymentId).getStatus());
     }
 
