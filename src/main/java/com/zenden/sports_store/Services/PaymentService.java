@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.zenden.sports_store.Classes.PaymentInfo;
+import com.zenden.sports_store.Classes.Enum.OrderStatus;
 import com.zenden.sports_store.Repositories.OrderRepository;
 import com.zenden.sports_store.Repositories.PaymentRepository;
 
@@ -29,7 +30,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
 
-    private final List<String> statuses = List.of("pending", "waiting_for_capture");
+    private final List<String> statuses = List.of("pending", "waiting_for_capture", "succeeded");
 
     public Payment createPayment(Double value, String currency, Long orderId) throws Exception {
         PaymentProcessor paymentProcessor = new PaymentProcessor(apiClient);
@@ -72,6 +73,15 @@ public class PaymentService {
             payment = paymentProcessor.capture(payment.getId(), Payment.builder().build(), null);
         }
 
+        if ("succeeded".equals(payment.getStatus())) {
+            orderRepository.findById(paymentInfo.getOrder().getId())
+                    .ifPresent(order -> {
+                        if (OrderStatus.PENDING.equals(order.getStatus())) {
+                            order.setStatus(OrderStatus.PROCESSING);
+                            orderRepository.save(order);
+                        }
+                    });
+        }
         updatePaymentInfoStatus(paymentInfo, payment);
 
         return paymentInfo;
