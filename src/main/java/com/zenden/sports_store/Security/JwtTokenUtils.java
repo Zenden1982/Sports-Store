@@ -20,11 +20,11 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenUtils {
-    
+
     @Value("f9JgP5qXwXmZTQmQ5zKc8v8h6ZTQbYqP9wRpL5cU5sA=")
     private String secret;
 
-    @Value("3600000")
+    @Value("36000")
     private Duration lifeTime;
 
     private SecretKey getSignInKey() {
@@ -34,7 +34,8 @@ public class JwtTokenUtils {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                .collect(Collectors.toList());
         claims.put("roles", roles);
         Date issueDate = new Date();
         Date expirationDate = new Date(issueDate.getTime() + lifeTime.toMillis());
