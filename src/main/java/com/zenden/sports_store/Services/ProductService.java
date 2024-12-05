@@ -1,7 +1,5 @@
 package com.zenden.sports_store.Services;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Classes.DTO.ProductCreateUpdateDTO;
 import com.zenden.sports_store.Classes.DTO.ProductReadDTO;
+import com.zenden.sports_store.Classes.Product;
 import com.zenden.sports_store.Filters.Product.ProductFiler;
 import com.zenden.sports_store.Filters.Product.ProductSpecification;
 import com.zenden.sports_store.Mapper.ProductMapper;
@@ -48,10 +46,7 @@ public class ProductService {
     // @Cacheable(value = "products", key = "#id")
     public ProductReadDTO read(Long id, String currency) {
         return productRepository.findById(id).map(productMapper::productToProductReadDTO).map(product -> {
-            product.setPrice(BigDecimal
-                    .valueOf(product.getPrice()
-                            * exchangeRateService.getActualExchangeRate(product.getPrice(), currency))
-                    .setScale(2, RoundingMode.HALF_UP).doubleValue());
+            product.setPrice(exchangeRateService.getActualExchangeRate(product.getPrice(), currency));
             return product;
         })
                 .orElseThrow(() -> new RuntimeException("Error reading product" + id));
