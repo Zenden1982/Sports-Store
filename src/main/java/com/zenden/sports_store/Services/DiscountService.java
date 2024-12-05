@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,6 +37,7 @@ public class DiscountService implements TwoDtoService<DiscountReadDTO, DiscountC
 
     @Override
     public DiscountReadDTO read(Long id) {
+        CheckExpiryDate();
         return discountMapper.discountToDiscountDTO(
                 discountRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading discount" + id)));
     }
@@ -53,19 +56,22 @@ public class DiscountService implements TwoDtoService<DiscountReadDTO, DiscountC
                             ? DiscountSpecification.percentageGreaterThan(filter.getPercengateGreater())
                             : null);
         }
-
+        CheckExpiryDate();
         return discountRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
                 .map(discountMapper::discountToDiscountDTO);
+    }
+
+    private void CheckExpiryDate() {
+        discountRepository.findByExpiryDateBefore(LocalDateTime.now())
+                .forEach(discount -> discountRepository.delete(discount));
     }
 
     @Override
     public DiscountReadDTO update(Long id, DiscountCreateUpdateDTO entity) {
         return discountRepository.findById(id).map(discount -> {
             Discount tempDiscount = discountMapper.discountDTOToDiscount(entity);
-            discount.setCode(tempDiscount.getCode());
             discount.setPercentage(tempDiscount.getPercentage());
             discount.setExpiryDate(tempDiscount.getExpiryDate());
-            discount.setDescription(tempDiscount.getDescription());
             discount.setProduct(tempDiscount.getProduct());
             return discountMapper.discountToDiscountDTO(discountRepository.save(discount));
         }).orElseThrow(() -> new RuntimeException("Error updating discount" + id));
