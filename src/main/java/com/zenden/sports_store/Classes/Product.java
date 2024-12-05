@@ -23,7 +23,7 @@ public class Product extends BaseEntity {
     @Column(unique = true, nullable = false, length = 50)
     private String productName;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 600)
     private String productDescription;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
