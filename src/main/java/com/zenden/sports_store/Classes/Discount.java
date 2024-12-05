@@ -16,10 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "discounts")
-public class Discount extends BaseEntity{
-
-    @Column(nullable = false, unique = true, length=15)
-    private String code;
+public class Discount extends BaseEntity {
 
     @Column(nullable = false)
     @Min(1)
@@ -28,9 +25,6 @@ public class Discount extends BaseEntity{
 
     @Column(nullable = false)
     private LocalDateTime expiryDate;
-
-    @Column(nullable = true, length=100)
-    private String description;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
