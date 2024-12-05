@@ -1,5 +1,7 @@
 package com.zenden.sports_store.Classes;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -20,6 +22,9 @@ public class Discount extends BaseEntity {
     @Min(1)
     @Max(100)
     private int percentage;
+
+    @Column(nullable = false)
+    private LocalDateTime expiryDate;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
