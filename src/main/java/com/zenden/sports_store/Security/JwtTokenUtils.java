@@ -24,7 +24,7 @@ public class JwtTokenUtils {
     @Value("f9JgP5qXwXmZTQmQ5zKc8v8h6ZTQbYqP9wRpL5cU5sA=")
     private String secret;
 
-    @Value("36000")
+    @Value("3600000")
     private Duration lifeTime;
 
     private SecretKey getSignInKey() {
