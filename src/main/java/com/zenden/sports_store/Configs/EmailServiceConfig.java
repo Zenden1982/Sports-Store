@@ -12,7 +12,7 @@ public class EmailServiceConfig {
 
     private String EMAIL_TEMPLATE = "welcome-email";
 
-    private String IMAGE_PATH = "src/main/resources/images/American Psycho.jpg";
+    private String IMAGE_PATH = "/app/images/header.jpg";
 
     private String IMAGE_ID = "imageId";
 }
